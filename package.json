@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.2.0"
+    "react-scripts": "^0.3.0-alpha"
   },
   "dependencies": {
     "pushstate-server": "^1.9.0",
