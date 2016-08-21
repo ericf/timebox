@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import Auth from './Auth';
 import Members from './Members';
+import AgendasList from './AgendasList';
 
 class App extends Component {
   static contextTypes = {
@@ -11,14 +12,22 @@ class App extends Component {
     user        : PropTypes.object,
   };
 
+  state = {
+    agenda: null,
+  };
+
+  onAgendaSelect = (agenda) => {
+    this.setState({agenda});
+  };
+
   render() {
-    const {app, user, now, isAdmin} = this.context;
+    const {app, user, isAdmin} = this.context;
 
     return (
       <div>
         {user ? <Auth auth={app.auth()} user={user}/> : null}
         {isAdmin ? <Members database={app.database()}/> : null}
-        <p>{now()}</p>
+        <AgendasList onAgendaSelect={this.onAgendaSelect}/>
       </div>
     );
   }

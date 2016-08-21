@@ -169,16 +169,17 @@ function generator(ast) {
   });
 }
 
+export function createAgenda({html_url, url, path, sha}) {
+  let id = path.replace(/\.md$/, '');
+  let [year, month] = id.split('/').map(Number);
+  return {id, year, month, html_url, url, sha};
+};
+
 export function compileAgenda(agenda) {
   let tokens = marked.lexer(atob(agenda.content));
   let ast = transformer(parser(tokens));
-  let [year, month] = agenda.path.replace(/\.md$/, '').split('/').map(Number);
-
   return {
-    year,
-    month,
-    url: agenda.html_url,
-    sha: agenda.sha,
+    ...createAgenda(agenda),
     content: {
       timeboxed: generator(ast),
       links: ast.links,
