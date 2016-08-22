@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent, PropTypes} from 'react';
 import {GithubAuthProvider} from 'firebase/auth';
 
 const AnonymousUser = ({onSignIn}) => (
@@ -14,23 +14,20 @@ const AuthenticatedUser = ({user, onSignOut}) => (
   </div>
 );
 
-export default class Auth extends Component {
+export default class Auth extends PureComponent {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
   };
 
-  onSignIn  = this.onSignIn.bind(this);
-  onSignOut = this.onSignOut.bind(this);
-
-  onSignIn(e) {
+  onSignIn = (e) => {
     e.preventDefault();
 
     const provider = new GithubAuthProvider();
     this.props.auth.signInWithRedirect(provider);
   }
 
-  onSignOut(e) {
+  onSignOut = (e) => {
     e.preventDefault();
     this.props.auth.signOut();
   }

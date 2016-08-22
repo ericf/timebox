@@ -6,9 +6,7 @@ export default class Members extends Component {
     database: PropTypes.object.isRequired,
   };
 
-  onUpdateMembers = this.onUpdateMembers.bind(this);
-
-  async onUpdateMembers(e) {
+  onUpdateMembers = async (e) => {
     const orgMembers = await getOrgMembers();
 
     const orgMembersMap = orgMembers.reduce((members, {id}) => {
