@@ -175,14 +175,11 @@ export function createAgenda({html_url, url, path, sha}) {
   return {id, year, month, html_url, url, sha};
 };
 
-export function compileAgenda(agenda) {
-  let tokens = marked.lexer(atob(agenda.content));
+export function compileAgendaContent(agendaContent) {
+  let tokens = marked.lexer(atob(agendaContent));
   let ast = transformer(parser(tokens));
   return {
-    ...createAgenda(agenda),
-    content: {
-      timeboxed: generator(ast),
-      links: ast.links,
-    },
+    timeboxed: generator(ast),
+    links: ast.links,
   };
 }
