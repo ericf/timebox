@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react';
+import React, {Component, PureComponent, PropTypes} from 'react';
 import {getAgendas} from '../github';
 import {createAgenda} from '../agendas';
 
-class AgendasListItem extends Component {
+class AgendasListItem extends PureComponent {
   static df = new Intl.DateTimeFormat('en', {
     year: 'numeric',
     month: 'long',
@@ -24,7 +24,7 @@ class AgendasListItem extends Component {
   }
 };
 
-class AgendasList extends Component {
+class AgendasList extends PureComponent {
   static propTypes = {
     agendas       : PropTypes.array.isRequired,
     onAgendaSelect: PropTypes.func.isRequired,
@@ -33,7 +33,7 @@ class AgendasList extends Component {
   render() {
     return (
       <ul>
-        {[...this.props.agendas].reverse().map((agenda) => (
+        {this.props.agendas.map((agenda) => (
           <li key={agenda.id}>
             <AgendasListItem
               agenda={agenda}
@@ -48,16 +48,32 @@ class AgendasList extends Component {
 
 export default class AgendasListContainer extends Component {
   static propTypes = {
+    numLatest     : PropTypes.number.isRequired,
     onAgendaSelect: AgendasList.propTypes.onAgendaSelect,
+  };
+
+  static defaultProps = {
+    numLatest: 2,
   };
 
   state = {
     agendas: null,
   };
 
-  async componentDidMount() {
-    let agendas = (await getAgendas()).map(createAgenda);
+  async updateAgendas(numLatest) {
+    const allAgendas = (await getAgendas()).map(createAgenda).reverse();
+    const agendas = allAgendas.slice(0, numLatest);
     this.setState({agendas});
+  }
+
+  async componentDidMount() {
+    this.updateAgendas(this.props.numLatest);
+  }
+
+  componentWillReceiveProps({numLatest: nextNumLatest}) {
+    if (nextNumLatest !== this.props.numLatest) {
+      this.updateAgendas(nextNumLatest);
+    }
   }
 
   render() {
