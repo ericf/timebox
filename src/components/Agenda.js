@@ -63,12 +63,17 @@ export default class AgendaContainer extends Component {
     agenda: Agenda.propTypes.agenda,
   };
 
+  static contextTypes = {
+    accessToken: PropTypes.string.isRequired,
+  };
+
   state = {
     agendaContent: null,
   };
 
   async updateAgendaContent(agenda) {
-    const rawAgendaContent = (await getAgendaContents(agenda)).content;
+    const {accessToken} = this.context;
+    const rawAgendaContent = (await getAgendaContents(agenda, {accessToken})).content;
     const agendaContent = compileAgendaContent(rawAgendaContent);
     this.setState({agendaContent});
   }

@@ -11,6 +11,7 @@ class App extends Component {
     isAuthorized: PropTypes.bool.isRequired,
     isAdmin     : PropTypes.bool.isRequired,
     user        : PropTypes.object,
+    accessToken : PropTypes.string,
   };
 
   state = {
@@ -35,17 +36,17 @@ class App extends Component {
   }
 
   render() {
-    const {app, isAuthorized, isAdmin,user} = this.context;
+    const {isAuthorized, isAdmin, user, accessToken} = this.context;
     const {agenda} = this.state;
 
     return (
       <div>
-        {user ? <Auth auth={app.auth()} user={user}/> : null}
-        {isAdmin ? <Members database={app.database()}/> : null}
+        {user ? <Auth/> : null}
+        {isAdmin ? <Members/> : null}
         {isAuthorized ? <AgendasList onAgendaSelect={this.onAgendaSelect}/>: null}
         <div>
           <p>Current Agenda:</p>
-          {agenda ? <Agenda agenda={agenda}/> : null}
+          {agenda && accessToken ? <Agenda agenda={agenda}/> : null}
         </div>
       </div>
     );

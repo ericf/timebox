@@ -52,6 +52,10 @@ export default class AgendasListContainer extends Component {
     onAgendaSelect: AgendasList.propTypes.onAgendaSelect,
   };
 
+  static contextTypes = {
+    accessToken: PropTypes.string.isRequired,
+  }
+
   static defaultProps = {
     numLatest: 2,
   };
@@ -61,7 +65,8 @@ export default class AgendasListContainer extends Component {
   };
 
   async updateAgendas(numLatest) {
-    const allAgendas = (await getAgendas()).map(createAgenda).reverse();
+    const {accessToken} = this.context;
+    const allAgendas = (await getAgendas({accessToken})).map(createAgenda).reverse();
     const agendas = allAgendas.slice(0, numLatest);
     this.setState({agendas});
   }

@@ -15,25 +15,28 @@ const AuthenticatedUser = ({user, onSignOut}) => (
 );
 
 export default class Auth extends PureComponent {
-  static propTypes = {
-    auth: PropTypes.object.isRequired,
+  static contextTypes = {
+    app: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
   };
 
   onSignIn = (e) => {
     e.preventDefault();
 
+    const auth = this.context.app.auth();
     const provider = new GithubAuthProvider();
-    this.props.auth.signInWithRedirect(provider);
+    auth.signInWithRedirect(provider);
   }
 
   onSignOut = (e) => {
     e.preventDefault();
-    this.props.auth.signOut();
+
+    const auth = this.context.app.auth();
+    auth.signOut();
   }
 
   render() {
-    const {user} = this.props;
+    const {user} = this.context;
 
     if (user.isAnonymous) {
       return (

@@ -12,6 +12,7 @@ export default class Provider extends Component {
     isAuthorized: PropTypes.bool.isRequired,
     isAdmin     : PropTypes.bool.isRequired,
     user        : PropTypes.object,
+    accessToken : PropTypes.string,
   };
 
   unsubscribeAuthListener = null;
@@ -21,6 +22,7 @@ export default class Provider extends Component {
     isAuthorized: false,
     isAdmin     : false,
     user        : null,
+    accessToken : null,
   };
 
   async computeTimeDrift(user) {
@@ -56,6 +58,22 @@ export default class Provider extends Component {
     return uid === adminId;
   }
 
+  async getAccessToken(user, {accessToken} = {}) {
+    if (user.isAnonymous) {
+      return null;
+    }
+
+    const db = this.props.app.database();
+    const accessTokenPath = `users/${user.uid}/accessToken`;
+
+    if (accessToken) {
+      await db.ref(accessTokenPath).set(accessToken);
+      return accessToken;
+    }
+
+    return (await db.ref(accessTokenPath).once('value')).val();
+  }
+
   subscribeAuthStateChanged() {
     const auth = this.props.app.auth();
 
@@ -64,13 +82,21 @@ export default class Provider extends Component {
         return auth.signInAnonymously();
       }
 
-      const [timeDrift, isAuthorized, isAdmin] = await Promise.all([
+      const {credential} = await auth.getRedirectResult();
+
+      const [
+        timeDrift,
+        isAuthorized,
+        isAdmin,
+        accessToken,
+      ] = await Promise.all([
         this.computeTimeDrift(user),
         this.isUserAuthorized(user),
         this.isUserAdmin(user),
+        this.getAccessToken(user, credential),
       ]);
 
-      this.setState({timeDrift, isAuthorized, isAdmin, user});
+      this.setState({timeDrift, isAuthorized, isAdmin, user, accessToken});
     });
   }
 
@@ -84,10 +110,10 @@ export default class Provider extends Component {
 
   getChildContext() {
     const {app} = this.props;
-    const {timeDrift, isAuthorized, isAdmin, user} = this.state;
+    const {timeDrift, isAuthorized, isAdmin, user, accessToken} = this.state;
     const now = () => Date.now() + timeDrift;
 
-    return {app, now, isAuthorized, isAdmin, user};
+    return {app, now, isAuthorized, isAdmin, user, accessToken};
   }
 
   render() {
