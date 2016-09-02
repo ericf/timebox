@@ -59,44 +59,44 @@ class Agenda extends PureComponent {
 };
 
 export default class AgendaContainer extends Component {
-  static propTypes = {
-    agenda: Agenda.propTypes.agenda,
-  };
-
   static contextTypes = {
     accessToken: PropTypes.string.isRequired,
+  };
+
+  static propTypes = {
+    id: PropTypes.string.isRequired,
   };
 
   state = {
     agendaContent: null,
   };
 
-  async updateAgendaContent(agenda) {
+  async updateAgendaContent(id) {
     const {accessToken} = this.context;
-    const rawAgendaContent = (await getAgendaContents(agenda, {accessToken})).content;
-    const agendaContent = compileAgendaContent(rawAgendaContent);
-    this.setState({agendaContent});
+    const agenda = (await getAgendaContents(id, {accessToken}));
+    const agendaContent = compileAgendaContent(agenda.content);
+    this.setState({agenda, agendaContent});
   }
 
   componentDidMount() {
-    this.updateAgendaContent(this.props.agenda);
+    this.updateAgendaContent(this.props.id.replace('-', '/'));
   }
 
-  componentWillReceiveProps({agenda: nextAgenda}) {
-    if (nextAgenda !== this.props.agenda) {
-      this.updateAgendaContent(nextAgenda);
+  componentWillReceiveProps({id: nextId}) {
+    if (nextId !== this.props.id) {
+      this.updateAgendaContent(nextId.replace('-', '/'));
     }
   }
 
   render() {
-    const {agendaContent} = this.state;
-    if (!agendaContent) {
+    const {agenda, agendaContent} = this.state;
+    if (!(agenda && agendaContent)) {
       return null;
     }
 
     return (
       <Agenda
-        agenda={this.props.agenda}
+        agenda={agenda}
         agendaContent={agendaContent}
       />
     );

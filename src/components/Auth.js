@@ -1,54 +1,42 @@
-import React, {Component, PropTypes} from 'react';
-import {GithubAuthProvider} from 'firebase/auth';
+import React, {PureComponent, PropTypes} from 'react';
 
-const AnonymousUser = ({onSignIn}) => (
-  <div>
-    <button onClick={onSignIn}>Sign In</button>
-  </div>
-);
-
-const AuthenticatedUser = ({user, onSignOut}) => (
-  <div>
-    {user.displayName}
-    <button onClick={onSignOut}>Sign Out</button>
-  </div>
-);
-
-export default class Auth extends Component {
-  static contextTypes = {
-    app: PropTypes.object.isRequired,
-    user: PropTypes.object.isRequired,
+export default class Auth extends PureComponent {
+  static propTypes = {
+    onSignIn : PropTypes.func.isRequired,
+    onSignOut: PropTypes.func.isRequired,
+    user     : PropTypes.object,
   };
 
-  onSignIn = (e) => {
+  onSignInClick = (e) => {
     e.preventDefault();
-
-    const auth = this.context.app.auth();
-    const provider = new GithubAuthProvider();
-    auth.signInWithRedirect(provider);
+    this.props.onSignIn();
   }
 
-  onSignOut = (e) => {
+  onSignOutClick = (e) => {
     e.preventDefault();
-
-    const auth = this.context.app.auth();
-    auth.signOut();
+    this.props.onSignOut();
   }
 
   render() {
-    const {user} = this.context;
+    const {user} = this.props;
+
+    if (!user) {
+      return null;
+    }
 
     if (user.isAnonymous) {
       return (
-        <AnonymousUser onSignIn={this.onSignIn}/>
+        <div>
+          <button onClick={this.onSignInClick}>Sign In</button>
+        </div>
       );
     }
 
     return (
-      <AuthenticatedUser
-        user={user}
-        onSignOut={this.onSignOut}
-      />
+      <div>
+        {user.displayName}
+        <button onClick={this.onSignOutClick}>Sign Out</button>
+      </div>
     );
   }
 };

@@ -1,8 +1,10 @@
 import firebase from 'firebase/app';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import Provider from './components/Provider';
 import App from './components/App';
+import Timebox from './components/Timebox';
 import './index.css';
 
 const app = firebase.initializeApp({
@@ -14,7 +16,11 @@ const app = firebase.initializeApp({
 
 ReactDOM.render(
   <Provider app={app}>
-    <App/>
+    <Router history={browserHistory}>
+      <Route path='/' component={App}>
+        <IndexRoute component={Timebox}/>
+      </Route>
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

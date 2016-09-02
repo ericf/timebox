@@ -117,6 +117,10 @@ export default class Provider extends Component {
   }
 
   render() {
+    if (!this.state.user) {
+      return null;
+    }
+
     return Children.only(this.props.children);
   }
 };

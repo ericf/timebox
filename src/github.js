@@ -43,6 +43,7 @@ export async function getAgendas({accessToken}) {
 }
 
 export async function getAgendaContents(agenda, {accessToken}) {
-  let agendaContentsRes = await fetchGithub(agenda.url, {accessToken});
+  let url = agenda.url || `/repos/tc39/agendas/contents/${agenda}.md`;
+  let agendaContentsRes = await fetchGithub(url, {accessToken});
   return agendaContentsRes.json();
 }
