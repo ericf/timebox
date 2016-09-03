@@ -176,8 +176,12 @@ export function createAgenda({html_url, url, path, sha}) {
 };
 
 export function compileAgendaContent(agendaContent) {
-  let tokens = marked.lexer(atob(agendaContent));
+  // Remove newlines from Base64 content so Safari doesn't barf when decoding.
+  let decodedAgendaContent = atob(agendaContent.replace(/\n/g, ''));
+  
+  let tokens = marked.lexer(decodedAgendaContent);
   let ast = transformer(parser(tokens));
+
   return {
     timeboxed: generator(ast),
     links: ast.links,
