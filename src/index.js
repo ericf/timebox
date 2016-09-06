@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {AppRegistry} from 'react-native';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import Provider from './components/Provider';
 import App from './components/App';
@@ -14,13 +14,17 @@ const app = firebase.initializeApp({
   storageBucket: "tc39-timebox.appspot.com",
 });
 
-ReactDOM.render(
+const TimeboxApp = () => (
   <Provider app={app}>
     <Router history={browserHistory}>
       <Route path='/' component={App}>
         <IndexRoute component={Timebox}/>
       </Route>
     </Router>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );
+
+AppRegistry.registerComponent('Timebox', () => TimeboxApp);
+AppRegistry.runApplication('Timebox', {
+  rootTag: document.getElementById('root')
+});

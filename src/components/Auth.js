@@ -1,4 +1,6 @@
 import React, {PureComponent, PropTypes} from 'react';
+import {View, Image, StyleSheet} from 'react-native';
+import Button from './Button';
 
 export default class Auth extends PureComponent {
   static propTypes = {
@@ -18,6 +20,7 @@ export default class Auth extends PureComponent {
   }
 
   render() {
+    const {styles} = Auth;
     const {user} = this.props;
 
     if (!user) {
@@ -26,17 +29,41 @@ export default class Auth extends PureComponent {
 
     if (user.isAnonymous) {
       return (
-        <div>
-          <button onClick={this.onSignInClick}>Sign In</button>
-        </div>
+        <View style={styles.container}>
+          <Button
+            label='Sign In'
+            onPress={this.onSignInClick}
+          />
+        </View>
       );
     }
 
     return (
-      <div>
-        {user.displayName}
-        <button onClick={this.onSignOutClick}>Sign Out</button>
-      </div>
+      <View style={styles.container}>
+        <Image
+          accessibilityLabel={`${user.displayName}'s avatar`}
+          source={{uri: user.photoURL}}
+          style={styles.avatar}
+        />
+        <Button
+          label='Sign Out'
+          onPress={this.onSignOutClick}
+        />
+      </View>
     );
   }
+
+  static styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+    },
+    avatar: {
+      width: 32,
+      height: 32,
+      borderRadius: 3,
+      marginRight: '0.5rem'
+    },
+  });
 };

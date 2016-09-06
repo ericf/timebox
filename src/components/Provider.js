@@ -58,7 +58,7 @@ export default class Provider extends Component {
     return uid === adminId;
   }
 
-  async getAccessToken(user, {accessToken} = {}) {
+  async updateAccessToken(user, {accessToken} = {}) {
     if (user.isAnonymous) {
       return null;
     }
@@ -93,8 +93,13 @@ export default class Provider extends Component {
         this.computeTimeDrift(user),
         this.isUserAuthorized(user),
         this.isUserAdmin(user),
-        this.getAccessToken(user, credential),
+        this.updateAccessToken(user, credential),
       ]);
+
+      // Handle case where users are cleared from the database.
+      if (isAuthorized && !accessToken) {
+        return auth.signOut();
+      }
 
       this.setState({timeDrift, isAuthorized, isAdmin, user, accessToken});
     });
@@ -117,10 +122,6 @@ export default class Provider extends Component {
   }
 
   render() {
-    if (!this.state.user) {
-      return null;
-    }
-
     return Children.only(this.props.children);
   }
 };

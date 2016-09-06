@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
+import {View, Text} from 'react-native';
 
 export default class TimeboxContainer extends Component {
   render() {
     return (
-      <p>Hi</p>
+      <View>
+        <Text>Hi there!</Text>
+      </View>
     );
   }
 };
