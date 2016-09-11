@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react';
 import {View, Text, ActivityIndicator, StyleSheet} from 'react-native';
 import {GithubAuthProvider} from 'firebase/auth';
-import Auth from './Auth';
-import JSLogo from './JSLogo';
-import Timer from './Timer';
+import Auth from '../components/Auth';
+import JSLogo from '../components/JSLogo';
+import Timer from '../components/Timer';
 
 export default class App extends Component {
   static contextTypes = {
@@ -13,13 +13,13 @@ export default class App extends Component {
   };
 
   state = {
-    timeboxed: {
+    timebox: {
       startTime: 0,
       duration : 0,
     },
   };
 
-  timeboxedRef = null;
+  timeboxRef = null;
 
   signIn = () => {
     const auth = this.context.app.auth();
@@ -34,20 +34,20 @@ export default class App extends Component {
 
   componentDidMount() {
     const db = this.context.app.database();
-    this.timeboxedRef = db.ref('timeboxed');
-    this.timeboxedRef.on('value', (snapshot) => {
-      this.setState({timeboxed: snapshot.val()});
+    this.timeboxRef = db.ref('timebox');
+    this.timeboxRef.on('value', (snapshot) => {
+      this.setState({timebox: snapshot.val()});
     });
   }
 
   componentWillUnmount() {
-    this.timeboxedRef.off();
+    this.timeboxRef.off();
   }
 
   render() {
     const {styles} = App;
     const {user, now} = this.context;
-    const {timeboxed} = this.state;
+    const {timebox} = this.state;
 
     if (!user) {
       return (
@@ -71,8 +71,8 @@ export default class App extends Component {
           <View style={styles.timer}>
             <Timer
               getTime={now}
-              startTime={timeboxed.startTime}
-              duration={timeboxed.duration}
+              startTime={timebox.startTime}
+              duration={timebox.duration}
             />
           </View>
           <View style={styles.logo}>

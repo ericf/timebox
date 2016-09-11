@@ -2,10 +2,9 @@ import firebase from 'firebase/app';
 import React from 'react';
 import {AppRegistry} from 'react-native';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
-import Provider from './components/Provider';
-import App from './components/App';
-import Timebox from './components/Timebox';
-import './index.css';
+import Provider from './containers/Provider';
+import App from './containers/App';
+import Timebox from './containers/Timebox';
 
 const app = firebase.initializeApp({
   apiKey: "AIzaSyCohfn5YXGIfehlrZTFE5moY2AowbrhMaw",
