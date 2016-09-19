@@ -15,7 +15,10 @@ export default class Button extends PureComponent {
         underlayColor='#d9d9d9'
         style={Button.styles.base}
       >
-        <Text style={Button.styles.label}>
+        <Text
+          style={Button.styles.label}
+          selectable={false}
+        >
           {this.props.label}
         </Text>
       </TouchableHighlight>

@@ -29,7 +29,10 @@ export default class Auth extends PureComponent {
 
     if (user.isAnonymous) {
       return (
-        <View style={styles.container}>
+        <View
+          style={styles.container}
+          accessibilityRole='complementary'
+        >
           <Button
             label='Sign In'
             onPress={this.onSignInClick}
@@ -39,7 +42,10 @@ export default class Auth extends PureComponent {
     }
 
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        accessibilityRole='complementary'
+      >
         <Image
           accessibilityLabel={`${user.displayName}'s avatar`}
           source={{uri: user.photoURL}}

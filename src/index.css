@@ -1,0 +1,9 @@
+html {
+  font-family: system, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+  color: #0446C4;
+}

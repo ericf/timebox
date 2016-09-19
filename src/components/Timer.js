@@ -61,7 +61,10 @@ export default class Timer extends PureComponent {
     const seconds = Math.floor(remaining % 60);
 
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        accessibilityRole='timer'
+      >
         <Text style={styles.timer}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>

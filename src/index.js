@@ -4,7 +4,11 @@ import {AppRegistry} from 'react-native';
 import {Router, Route, IndexRoute, browserHistory} from 'react-router';
 import Provider from './containers/Provider';
 import App from './containers/App';
-import Timebox from './containers/Timebox';
+import TimeboxPage from './containers/TimeboxPage';
+import CurrentAgendaPage from './containers/CurrentAgendaPage';
+import AgendaPage from './containers/AgendaPage';
+import AgendasPage from './containers/AgendasPage';
+import './index.css';
 
 const app = firebase.initializeApp({
   apiKey: "AIzaSyCohfn5YXGIfehlrZTFE5moY2AowbrhMaw",
@@ -17,7 +21,12 @@ const TimeboxApp = () => (
   <Provider app={app}>
     <Router history={browserHistory}>
       <Route path='/' component={App}>
-        <IndexRoute component={Timebox}/>
+        <IndexRoute component={TimeboxPage}/>
+        <Route path='/agenda' component={CurrentAgendaPage}/>
+        <Route path='/agendas/'>
+          <IndexRoute component={AgendasPage}/>
+          <Route path=':agendaId' component={AgendaPage}/>
+        </Route>
       </Route>
     </Router>
   </Provider>

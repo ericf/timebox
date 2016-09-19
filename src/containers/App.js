@@ -19,7 +19,7 @@ export default class App extends Component {
     },
   };
 
-  timeboxRef = null;
+  detachTimeboxListener = null;
 
   signIn = () => {
     const auth = this.context.app.auth();
@@ -34,14 +34,16 @@ export default class App extends Component {
 
   componentDidMount() {
     const db = this.context.app.database();
-    this.timeboxRef = db.ref('timebox');
-    this.timeboxRef.on('value', (snapshot) => {
+    const ref = db.ref('timebox');
+    const listener = ref.on('value', (snapshot) => {
       this.setState({timebox: snapshot.val()});
     });
+
+    this.detachTimeboxListener = () => ref.off('value', listener);
   }
 
   componentWillUnmount() {
-    this.timeboxRef.off();
+    this.detachTimeboxListener();
   }
 
   render() {
@@ -60,13 +62,18 @@ export default class App extends Component {
     }
 
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        accessibilityRole='application'
+      >
         <Auth
           user={user}
           onSignIn={this.signIn}
           onSignOut={this.signOut}
         />
-        {this.props.children}
+        <View accessibilityRole='main'>
+          {this.props.children}
+        </View>
         <View style={styles.footer}>
           <View style={styles.timer}>
             <Timer
@@ -75,7 +82,10 @@ export default class App extends Component {
               duration={timebox.duration}
             />
           </View>
-          <View style={styles.logo}>
+          <View
+            style={styles.logo}
+            accessibilityRole='banner'
+          >
             <JSLogo size={300}/>
             <Text style={styles.siteName}>
               TC39 Timebox
