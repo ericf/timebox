@@ -1,22 +1,30 @@
 import React, {Component, PropTypes} from 'react';
-import {Match} from 'react-router';
+import {Match, Link} from 'react-router';
 import {Text} from 'react-native';
 
 export default class MatchWhenAuthorized extends Component {
   static contextTypes = {
     isAuthorized: PropTypes.bool.isRequired,
+    isAdmin: PropTypes.bool.isRequired,
+  };
+
+  static propTypes = {
+    adminOnly: PropTypes.bool,
   };
 
   render() {
-    const {isAuthorized} = this.context;
-    const {component: Component, ...props} = this.props;
+    const {isAuthorized, isAdmin} = this.context;
+    const {component: Component, adminOnly, ...props} = this.props;
 
     return (
       <Match {...props} render={(props) => (
-        isAuthorized ? (
+        isAuthorized && (adminOnly ? isAdmin : true) ? (
           <Component {...props}/>
         ) : (
-          <Text>Not Authorized</Text>
+          <Text>
+            You're not authorized to view this page.{' '}
+            Either sign in, or return <Link to='/'>home</Link>.
+          </Text>
         )
       )}/>
     );

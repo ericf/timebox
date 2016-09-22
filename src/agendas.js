@@ -169,16 +169,16 @@ function generator(ast) {
   });
 }
 
-export function createAgenda({html_url, url, path, sha}) {
+export function createAgenda({html_url, url, path, sha, content}) {
   let id = path.replace(/\.md$/, '');
   let [year, month] = id.split('/').map(Number);
-  return {id, year, month, html_url, url, sha};
+  return {id, year, month, html_url, url, sha, content};
 };
 
 export function compileAgendaContent(agendaContent) {
   // Remove newlines from Base64 content so Safari doesn't barf when decoding.
   let decodedAgendaContent = atob(agendaContent.replace(/\n/g, ''));
-  
+
   let tokens = marked.lexer(decodedAgendaContent);
   let ast = transformer(parser(tokens));
 

@@ -9,12 +9,12 @@ export default class Auth extends PureComponent {
     user     : PropTypes.object,
   };
 
-  onSignInClick = (e) => {
+  onSignInPress = (e) => {
     e.preventDefault();
     this.props.onSignIn();
   }
 
-  onSignOutClick = (e) => {
+  onSignOutPress = (e) => {
     e.preventDefault();
     this.props.onSignOut();
   }
@@ -35,7 +35,7 @@ export default class Auth extends PureComponent {
         >
           <Button
             label='Sign In'
-            onPress={this.onSignInClick}
+            onPress={this.onSignInPress}
           />
         </View>
       );
@@ -53,7 +53,7 @@ export default class Auth extends PureComponent {
         />
         <Button
           label='Sign Out'
-          onPress={this.onSignOutClick}
+          onPress={this.onSignOutPress}
         />
       </View>
     );

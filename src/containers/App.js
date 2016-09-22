@@ -1,9 +1,16 @@
 import React, {Component, PropTypes} from 'react';
+import {Match} from 'react-router';
 import {View, Text, ActivityIndicator, StyleSheet} from 'react-native';
 import {GithubAuthProvider} from 'firebase/auth';
+import MatchWhenAuthorized from '../components/MatchWhenAuthorized';
 import Auth from '../components/Auth';
 import JSLogo from '../components/JSLogo';
 import Timer from '../components/Timer';
+import TimeboxPage from './TimeboxPage';
+import CurrentAgendaPage from './CurrentAgendaPage';
+import AgendasPage from './AgendasPage';
+import AgendaPage from './AgendaPage';
+import MembersPage from './MembersPage';
 
 export default class App extends Component {
   static contextTypes = {
@@ -36,7 +43,7 @@ export default class App extends Component {
     const db = this.context.app.database();
     const ref = db.ref('timebox');
     const listener = ref.on('value', (snapshot) => {
-      this.setState({timebox: snapshot.val()});
+      this.setState({timebox: snapshot.val() || {}});
     });
 
     this.detachTimeboxListener = () => ref.off('value', listener);
@@ -72,7 +79,11 @@ export default class App extends Component {
           onSignOut={this.signOut}
         />
         <View accessibilityRole='main'>
-          {this.props.children}
+          <Match exactly pattern='/' component={TimeboxPage}/>
+          <Match exactly pattern='/agenda' component={CurrentAgendaPage}/>
+          <MatchWhenAuthorized pattern='/agendas/' component={AgendasPage}/>
+          <MatchWhenAuthorized pattern='/agendas/:agendaId' component={AgendaPage}/>
+          <MatchWhenAuthorized adminOnly pattern='/members' component={MembersPage}/>
         </View>
         <View style={styles.footer}>
           <View style={styles.timer}>

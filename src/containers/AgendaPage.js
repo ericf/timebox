@@ -1,14 +1,15 @@
 import React, {Component, PropTypes} from 'react';
-import {Text} from 'react-native';
-import {Link} from 'react-router';
-import {getAgendaContents} from '../github';
+import {ActivityIndicator, Text} from 'react-native';
+import {fetchGithub} from '../github';
 import {createAgenda} from '../agendas';
+import Navigate from '../components/Navigate';
+import Agenda from '../components/Agenda';
 
 export default class AgendaPage extends Component {
   static contextTypes = {
     app: PropTypes.object.isRequired,
     isAuthorized: PropTypes.bool.isRequired,
-    accessToken: PropTypes.string,
+    accessToken: PropTypes.string.isRequired,
   };
 
   static propTypes = {
@@ -19,25 +20,48 @@ export default class AgendaPage extends Component {
 
   state = {
     agenda: null,
+    isInvalid: false,
+    isLoading: false,
+    isAgendaSelected: false,
+  };
+
+  setAgenda = async (agenda) => {
+    const db = this.context.app.database();
+    await Promise.all([
+      db.ref('agenda').set(agenda),
+      db.ref('timebox').remove(),
+    ]);
+
+    this.setState({isAgendaSelected: true});
   };
 
   async updateAgenda(props, context) {
-    const {isAuthorized, accessToken} = context;
+    const {accessToken} = context;
     const {params: {agendaId}} = props;
 
-    let agenda = null;
+    this.setState({agenda: null});
 
-    if (isAuthorized && accessToken) {
-      let id = agendaId.replace('-', '/');
-      let agendaContents;
+    setTimeout(() => {
+      this.setState(({agenda, isInvalid}) => ({
+        isLoading: !agenda && !isInvalid,
+      }));
+    }, 200);
 
-      try {
-        agendaContents = await getAgendaContents(id, {accessToken});
-        agenda = createAgenda(agendaContents);
-      } catch (e) {}
+    try {
+      const id = agendaId.replace('-', '/');
+      const url = `/repos/tc39/agendas/contents/${id}.md`;
+      const res = await fetchGithub(url, {accessToken});
+      if (res.ok) {
+        const agenda = createAgenda(await res.json());
+        this.setState({agenda});
+      } else {
+        this.setState({isInvalid: true});
+      }
+    } catch (e) {
+      this.setState({isInvalid: true});
     }
 
-    this.setState({agenda});
+    this.setState({isLoading: false});
   }
 
   componentDidMount() {
@@ -52,20 +76,33 @@ export default class AgendaPage extends Component {
 
   render() {
     const {isAuthorized} = this.context;
-    const {agenda} = this.state;
+    const {agenda, isLoading, isInvalid, isAgendaSelected} = this.state;
 
-    if (!isAuthorized) {
+    if (isAgendaSelected) {
       return (
-        <Text>Not Authorized</Text>
+        <Navigate to='/agenda'/>
       );
     }
 
-    if (!agenda) {
-      return null;
+    if (isInvalid) {
+      return (
+        <Text>Agenda not found</Text>
+      );
     }
 
-    return (
-      <Text>{agenda.id}<Link to='/agendas/2016-07'>2016-07</Link></Text>
+    if (isLoading) {
+      return (
+        <ActivityIndicator color='black'/>
+      );
+    }
+
+    return agenda ? (
+      <Agenda
+        agenda={agenda}
+        onAgendaSelect={isAuthorized ? this.setAgenda : null}
+      />
+    ) : (
+      null
     );
   }
 }

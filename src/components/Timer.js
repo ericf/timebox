@@ -8,6 +8,11 @@ export default class Timer extends PureComponent {
     duration : PropTypes.number.isRequired,
   };
 
+  static defaultProps = {
+    startTime: 0,
+    duration: 0,
+  };
+
   static nf = new Intl.NumberFormat('en', {
     minimumIntegerDigits: 2,
   });
