@@ -18,7 +18,7 @@
     "dev": "node -r dotenv/config $(which react-scripts) start",
     "build": "react-scripts build",
     "start": "pushstate-server build",
-    "deploy": "now -e REACT_APP_API_KEY=@api_key -e REACT_APP_AUTH_DOMAIN=@auth_domain -e REACT_APP_DATABASE_URL=@database_url -e REACT_APP_STORAGE_BUCKET=@storage_bucket",
+    "now": "now -e REACT_APP_API_KEY=@api_key -e REACT_APP_AUTH_DOMAIN=@auth_domain -e REACT_APP_DATABASE_URL=@database_url -e REACT_APP_STORAGE_BUCKET=@storage_bucket",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
