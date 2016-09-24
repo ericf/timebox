@@ -3,6 +3,7 @@ import {View, Text, TouchableHighlight, StyleSheet} from 'react-native';
 import {compileAgendaContent} from '../agendas';
 import Button from './Button';
 import MarkdownContent from './MarkdownContent';
+import Refresh from './Refresh';
 
 class TimeboxedItem extends PureComponent {
   static propTypes = {
@@ -165,6 +166,7 @@ export default class Agenda extends PureComponent {
 
     onItemSelect: PropTypes.func,
     onAgendaSelect: PropTypes.func,
+    onAgendaRefresh: PropTypes.func,
   };
 
   static df = new Intl.DateTimeFormat('en', {
@@ -177,12 +179,18 @@ export default class Agenda extends PureComponent {
     this.props.onAgendaSelect(this.props.agenda);
   };
 
+  onAgendaRefreshPress = (e) => {
+    e.preventDefault();
+    this.props.onAgendaRefresh(this.props.agenda);
+  };
+
   render() {
     const {styles, df} = Agenda;
     const {
       agenda: {year, month, content},
       onItemSelect,
       onAgendaSelect,
+      onAgendaRefresh,
     } = this.props;
 
     const {timeboxed, links} = compileAgendaContent(content);
@@ -196,8 +204,13 @@ export default class Agenda extends PureComponent {
           >
             {df.format(new Date(year, month - 1))} Agenda
           </Text>
+          {onAgendaRefresh ? (
+            <Refresh onPress={this.onAgendaRefreshPress}/>
+          ) : (
+            null
+          )}
           {onAgendaSelect ? (
-            <Text style={styles.agendaSelect}>
+            <Text style={styles.agendaControl}>
               <Button
                 label='Set as Agenda'
                 onPress={this.onAgendaSelectPress}
@@ -237,7 +250,7 @@ export default class Agenda extends PureComponent {
       fontSize: '2rem',
       marginRight: '1rem',
     },
-    agendaSelect: {
+    agendaControl: {
       fontSize: '1rem',
     },
     noTimeboxed: {

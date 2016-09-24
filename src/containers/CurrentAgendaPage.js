@@ -2,6 +2,8 @@ import React, {Component, PropTypes} from 'react';
 import {View, Text, ActivityIndicator, StyleSheet} from 'react-native';
 import {Link} from 'react-router';
 import database from 'firebase/database';
+import {createAgenda} from '../agendas';
+import {fetchGithub} from '../github';
 import Navigate from '../components/Navigate';
 import Agenda from '../components/Agenda';
 
@@ -9,6 +11,7 @@ export default class CurrentAgendaPage extends Component {
   static contextTypes = {
     app: PropTypes.object.isRequired,
     isAuthorized: PropTypes.bool.isRequired,
+    accessToken: PropTypes.string,
   };
 
   state = {
@@ -18,6 +21,23 @@ export default class CurrentAgendaPage extends Component {
   };
 
   detachAgendaListener = null;
+
+  refreshAgenda = async () => {
+    const {app, accessToken} = this.context;
+    const {agenda: {url}} = this.state;
+
+    const res = await fetchGithub(url, {accessToken});
+    if (!res.ok) {
+      return;
+    }
+
+    const agenda = createAgenda(await res.json());
+    const {agenda: {id, sha}} = this.state;
+
+    if (agenda.id === id && agenda.sha !== sha) {
+      return app.database().ref('agenda').set(agenda);
+    }
+  };
 
   setTimeboxItem = async (item) => {
     const db = this.context.app.database();
@@ -89,6 +109,7 @@ export default class CurrentAgendaPage extends Component {
         <Agenda
           agenda={agenda}
           onItemSelect={isAuthorized ? this.setTimeboxItem : null}
+          onAgendaRefresh={isAuthorized ? this.refreshAgenda : null}
         />
       </View>
     );
