@@ -82,7 +82,7 @@ function parser(tokens) {
 
 function traverser(ast, visitor) {
   function traverseArray(array, parent) {
-      array.forEach((child) => traverseNode(child, parent));
+    array.forEach((child) => traverseNode(child, parent));
   }
 
   function traverseNode(node, parent) {

@@ -1,6 +1,12 @@
 import React, {Component, PropTypes} from 'react';
-import {Match} from 'react-router';
-import {View, Text, ActivityIndicator, StyleSheet} from 'react-native';
+import {Link, Match} from 'react-router';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import {GithubAuthProvider} from 'firebase/auth';
 import MatchWhenAuthorized from '../components/MatchWhenAuthorized';
 import Auth from '../components/Auth';
@@ -97,10 +103,18 @@ export default class App extends Component {
             style={styles.logo}
             accessibilityRole='banner'
           >
-            <JSLogo size={300}/>
-            <Text style={styles.siteName}>
-              TC39 Timebox
-            </Text>
+            <Link to='/'>
+              {({onClick}) => (
+                <TouchableOpacity>
+                  <View onClick={onClick}>
+                    <JSLogo size={300}/>
+                    <Text style={styles.siteName}>
+                      TC39 Timebox
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </Link>
           </View>
         </View>
       </View>
