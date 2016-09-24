@@ -205,7 +205,9 @@ export default class Agenda extends PureComponent {
             {df.format(new Date(year, month - 1))} Agenda
           </Text>
           {onAgendaRefresh ? (
-            <Refresh onPress={this.onAgendaRefreshPress}/>
+            <Text style={styles.agendaControl}>
+              <Refresh onPress={this.onAgendaRefreshPress}/>
+            </Text>
           ) : (
             null
           )}
@@ -252,6 +254,7 @@ export default class Agenda extends PureComponent {
     },
     agendaControl: {
       fontSize: '1rem',
+      marginRight: '1rem',
     },
     noTimeboxed: {
       fontStyle: 'italic',

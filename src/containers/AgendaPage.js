@@ -8,7 +8,6 @@ import Agenda from '../components/Agenda';
 export default class AgendaPage extends Component {
   static contextTypes = {
     app: PropTypes.object.isRequired,
-    isAuthorized: PropTypes.bool.isRequired,
     accessToken: PropTypes.string.isRequired,
   };
 
@@ -23,7 +22,10 @@ export default class AgendaPage extends Component {
     isInvalid: false,
     isLoading: false,
     isAgendaSelected: false,
+    isCurrentAgenda: true,
   };
+
+  detachCurrentAgendaListener = null;
 
   setAgenda = async (agenda) => {
     const db = this.context.app.database();
@@ -64,8 +66,21 @@ export default class AgendaPage extends Component {
     this.setState({isLoading: false});
   }
 
+  subscribeCurrentAgenda() {
+    const db = this.context.app.database();
+    const ref = db.ref('agenda');
+    const listener = ref.on('value', (snapshot) => {
+      this.setState((_, {params: {agendaId}}) => ({
+        isCurrentAgenda: snapshot.val().id === agendaId.replace('-', '/'),
+      }));
+    });
+
+    this.detachCurrentAgendaListener = () => ref.off('value', listener);
+  }
+
   componentDidMount() {
     this.updateAgenda(this.props, this.context);
+    this.subscribeCurrentAgenda();
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -74,9 +89,18 @@ export default class AgendaPage extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.detachCurrentAgendaListener();
+  }
+
   render() {
-    const {isAuthorized} = this.context;
-    const {agenda, isLoading, isInvalid, isAgendaSelected} = this.state;
+    const {
+      agenda,
+      isLoading,
+      isInvalid,
+      isAgendaSelected,
+      isCurrentAgenda,
+    } = this.state;
 
     if (isAgendaSelected) {
       return (
@@ -99,7 +123,7 @@ export default class AgendaPage extends Component {
     return agenda ? (
       <Agenda
         agenda={agenda}
-        onAgendaSelect={isAuthorized ? this.setAgenda : null}
+        onAgendaSelect={!isCurrentAgenda ? this.setAgenda : null}
       />
     ) : (
       null
