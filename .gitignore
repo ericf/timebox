@@ -7,5 +7,7 @@ node_modules
 build
 
 # misc
+.env
+.firebaserc
 .DS_Store
 npm-debug.log
