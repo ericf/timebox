@@ -7,10 +7,10 @@ import App from './containers/App';
 import './index.css';
 
 const app = firebase.initializeApp({
-  apiKey: "AIzaSyCohfn5YXGIfehlrZTFE5moY2AowbrhMaw",
-  authDomain: "tc39-timebox.firebaseapp.com",
-  databaseURL: "https://tc39-timebox.firebaseio.com",
-  storageBucket: "tc39-timebox.appspot.com",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 });
 
 const TimeboxApp = () => (

@@ -1,0 +1,26 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "admin": {
+      ".read": false,
+      ".write": false
+    },
+    "members": {
+      ".read": "auth !== null && auth.token.firebase.identities['github.com'][0] === root.child('admin').val()",
+      ".write": "auth !== null && auth.token.firebase.identities['github.com'][0] === root.child('admin').val()"
+    },
+    "agenda": {
+      ".write": "auth !== null && root.child('members').hasChild(auth.token.firebase.identities['github.com'][0])"
+    },
+    "timebox": {
+      ".write": "auth !== null && root.child('members').hasChild(auth.token.firebase.identities['github.com'][0])"
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth !== null && auth.uid === $uid",
+        ".write": "auth !== null && auth.uid === $uid"
+      }
+    }
+  }
+}
