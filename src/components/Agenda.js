@@ -22,7 +22,9 @@ class TimeboxedItem extends PureComponent {
       return;
     }
 
-    this.props.onSelect(this.props.item);
+    const {item, links, onSelect} = this.props;
+
+    onSelect({...item, links});
   };
 
   render() {
