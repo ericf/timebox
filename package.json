@@ -3,10 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.4.3"
+    "react-scripts": "0.6.0"
   },
   "dependencies": {
-    "dotenv": "^2.0.0",
     "firebase": "^3.2.1",
     "marked": "^0.3.6",
     "pushstate-server": "^1.9.0",
@@ -15,13 +14,13 @@
     "react-router": "^4.0.0-alpha.3"
   },
   "scripts": {
-    "dev": "node -r dotenv/config $(which react-scripts) start",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "start": "pushstate-server build",
     "now": "now -e REACT_APP_API_KEY=@api_key -e REACT_APP_AUTH_DOMAIN=@auth_domain -e REACT_APP_DATABASE_URL=@database_url -e REACT_APP_STORAGE_BUCKET=@storage_bucket",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "./node_modules/react-scripts/config/eslint.js"
+    "extends": "react-app"
   }
 }
