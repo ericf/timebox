@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link, Match} from 'react-router';
+import {Link, Match, Miss} from 'react-router';
 import {
   View,
   Text,
@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import {GithubAuthProvider} from 'firebase/auth';
 import MatchWhenAuthorized from '../components/MatchWhenAuthorized';
-import Auth from '../components/Auth';
 import JSLogo from '../components/JSLogo';
+import Auth from '../components/Auth';
 import Timer from '../components/Timer';
 import TimeboxPage from './TimeboxPage';
 import CurrentAgendaPage from './CurrentAgendaPage';
@@ -26,10 +26,7 @@ export default class App extends Component {
   };
 
   state = {
-    timebox: {
-      startTime: 0,
-      duration : 0,
-    },
+    timebox: undefined,
   };
 
   detachTimeboxListener = null;
@@ -84,30 +81,43 @@ export default class App extends Component {
           onSignIn={this.signIn}
           onSignOut={this.signOut}
         />
-        <View accessibilityRole='main'>
+        <View
+          style={styles.main}
+          accessibilityRole='main'
+        >
           <Match exactly pattern='/' component={TimeboxPage}/>
           <Match exactly pattern='/agenda' component={CurrentAgendaPage}/>
           <MatchWhenAuthorized pattern='/agendas/' component={AgendasPage}/>
           <MatchWhenAuthorized pattern='/agendas/:agendaId' component={AgendaPage}/>
           <MatchWhenAuthorized adminOnly pattern='/members' component={MembersPage}/>
         </View>
-        <View style={styles.footer}>
-          <View style={styles.timer}>
-            <Timer
-              getTime={now}
-              startTime={timebox.startTime}
-              duration={timebox.duration}
-            />
-          </View>
+        <View style={styles.statusTray}>
+          <Match pattern='*' render={() => (
+            <View style={styles.timer}>
+              <Match exactly pattern='/' render={() => (
+                <Timer
+                  {...timebox}
+                  getTime={now}
+                />
+              )}/>
+              <Miss render={() => (
+                <Timer
+                  {...timebox}
+                  getTime={now}
+                  showLabel
+                />
+              )}/>
+            </View>
+          )}/>
           <View
             style={styles.logo}
             accessibilityRole='banner'
           >
             <Link to='/'>
               {({onClick}) => (
-                <TouchableOpacity>
+                <TouchableOpacity style={styles.logo}>
                   <View onClick={onClick}>
-                    <JSLogo size={300}/>
+                    <JSLogo size={200}/>
                     <Text style={styles.siteName}>
                       TC39 Timebox
                     </Text>
@@ -124,31 +134,42 @@ export default class App extends Component {
   static styles = StyleSheet.create({
     loading: {
       flexGrow: 1,
-      backgroundColor: '#f7df1e',
     },
     container: {
       flexGrow: 1,
       justifyContent: 'space-between',
-      backgroundColor: '#f7df1e',
       padding: '1.5rem',
     },
-    footer: {
+    main: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingBottom: '14.875rem',
+    },
+    statusTray: {
+      position: 'fixed',
+      bottom: 0,
+      width: '100%',
+      padding: '1.5rem',
+      marginLeft: '-1.5rem',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-end',
+      backgroundColor: '#f7df1e',
+      boxShadow: '0 0 0.5rem rgba(0, 0, 0, 0.2)',
     },
     logo: {
-      marginRight: '-1.5rem'
+      marginLeft: '1.5rem',
     },
     siteName: {
       alignSelf: 'flex-end',
-      marginRight: '1.5rem',
+      marginTop: '1.25rem',
+      marginRight: '0.25rem',
       textTransform: 'uppercase',
       fontSize: '1.5rem',
-      letterSpacing: '0.08em',
+      letterSpacing: '0.09em',
     },
     timer: {
-      marginBottom: '2rem',
+      flexShrink: 1,
     },
   });
 }

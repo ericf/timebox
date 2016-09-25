@@ -1,16 +1,23 @@
 import React, {PureComponent, PropTypes} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import MarkdownContent from './MarkdownContent';
 
 export default class Timer extends PureComponent {
   static propTypes = {
-    getTime  : PropTypes.func.isRequired,
+    label    : PropTypes.string.isRequired,
+    links    : PropTypes.object.isRequired,
     startTime: PropTypes.number.isRequired,
     duration : PropTypes.number.isRequired,
+    getTime  : PropTypes.func.isRequired,
+    showLabel: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
+    label: '',
+    links: {},
     startTime: 0,
     duration: 0,
+    showLabel: false,
   };
 
   static nf = new Intl.NumberFormat('en', {
@@ -57,7 +64,7 @@ export default class Timer extends PureComponent {
 
   render() {
     const {styles, nf} = Timer;
-    const {startTime, duration} = this.props;
+    const {label, links, startTime, duration, showLabel} = this.props;
     const {now} = this.state;
 
     const endTime = startTime + duration;
@@ -67,23 +74,44 @@ export default class Timer extends PureComponent {
 
     return (
       <View
-        style={styles.container}
+        style={[(!showLabel || !label) && styles.noLabel]}
         accessibilityRole='timer'
       >
         <Text style={styles.timer}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>
+        {showLabel ? (
+          <View style={styles.label}>
+            <MarkdownContent
+              style={styles.labelMarkdown}
+              content={label}
+              links={links}
+            />
+          </View>
+        ) : (
+          null
+        )}
       </View>
     );
   }
 
   static styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
+    noLabel: {
+      marginBottom: '2rem',
     },
     timer: {
       fontSize: '8rem',
       lineHeight: '8rem',
     },
+    label: {
+      marginTop: '0.25rem',
+    },
+    labelMarkdown: {
+      marginVertical: 0,
+      fontSize: '1.5rem',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    }
   });
 };
