@@ -80,7 +80,7 @@ export default class Timer extends PureComponent {
         <Text style={styles.timer}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>
-        {showLabel ? (
+        {showLabel && label ? (
           <View style={styles.label}>
             <MarkdownContent
               style={styles.labelMarkdown}
