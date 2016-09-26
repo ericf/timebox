@@ -68,7 +68,9 @@ export default class TimeboxPage extends Component {
           accessibilityRole='heading'
         >
           Current Timeboxed Agenda Item:{' '}
-          {isAuthorized ? ['(', <Link to='/agenda' key={0}>Change</Link>, ')'] : null}
+          (<Link to='/agenda' key={0}>
+            {isAuthorized ? 'Change' : 'View Agenda'}
+          </Link>)
         </Text>
         <View style={styles.timebox}>
           <View style={styles.timeboxLabel}>
