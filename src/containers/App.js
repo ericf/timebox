@@ -10,6 +10,7 @@ import {
 import {GithubAuthProvider} from 'firebase/auth';
 import MatchWhenAuthorized from '../components/MatchWhenAuthorized';
 import JSLogo from '../components/JSLogo';
+import NavList from '../components/NavList';
 import Auth from '../components/Auth';
 import Timer from '../components/Timer';
 import TimeboxPage from './TimeboxPage';
@@ -76,11 +77,22 @@ export default class App extends Component {
         style={styles.container}
         accessibilityRole='application'
       >
-        <Auth
-          user={user}
-          onSignIn={this.signIn}
-          onSignOut={this.signOut}
-        />
+        <View
+          style={styles.nav}
+          accessibilityRole='navigation'
+        >
+          <NavList
+            items={[
+              {location: '/', label: 'Timebox'},
+              {location: '/agenda', label: 'Agenda'},
+            ]}
+          />
+          <Auth
+            user={user}
+            onSignIn={this.signIn}
+            onSignOut={this.signOut}
+          />
+        </View>
         <View
           style={styles.main}
           accessibilityRole='main'
@@ -93,7 +105,10 @@ export default class App extends Component {
         </View>
         <View style={styles.statusTray}>
           <Match pattern='*' render={() => (
-            <View style={styles.timer}>
+            <View
+              style={styles.timer}
+              accessibilityRole='status'
+            >
               <Match exactly pattern='/' render={() => (
                 <Timer
                   {...timebox}
@@ -113,18 +128,18 @@ export default class App extends Component {
             style={styles.logo}
             accessibilityRole='banner'
           >
-            <Link to='/'>
-              {({onClick}) => (
-                <TouchableOpacity style={styles.logo}>
+            <TouchableOpacity>
+              <Link to='/'>
+                {({onClick}) => (
                   <View onClick={onClick}>
                     <JSLogo size={200}/>
                     <Text style={styles.siteName}>
                       TC39 Timebox
                     </Text>
                   </View>
-                </TouchableOpacity>
-              )}
-            </Link>
+                )}
+              </Link>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -139,6 +154,11 @@ export default class App extends Component {
       flexGrow: 1,
       justifyContent: 'space-between',
       padding: '1.5rem',
+    },
+    nav: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: '1.5rem',
     },
     main: {
       flexGrow: 1,
@@ -158,7 +178,7 @@ export default class App extends Component {
       boxShadow: '0 0 0.5rem rgba(0, 0, 0, 0.2)',
     },
     logo: {
-      marginLeft: '1.5rem',
+      marginLeft: '3rem',
     },
     siteName: {
       alignSelf: 'flex-end',

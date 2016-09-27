@@ -62,7 +62,6 @@ export default class Auth extends PureComponent {
   static styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      justifyContent: 'flex-end',
       alignItems: 'center',
     },
     avatar: {
