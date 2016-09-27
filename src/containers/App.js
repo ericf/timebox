@@ -158,7 +158,7 @@ export default class App extends Component {
     nav: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: '1.5rem',
+      marginBottom: '3rem',
     },
     main: {
       flexGrow: 1,
