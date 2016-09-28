@@ -1,15 +1,22 @@
 import React, {PureComponent, PropTypes} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import MarkdownContent from './MarkdownContent';
+import Play from './Play';
+import Pause from './Pause';
 
 export default class Timer extends PureComponent {
   static propTypes = {
-    label    : PropTypes.string.isRequired,
-    links    : PropTypes.object.isRequired,
-    startTime: PropTypes.number.isRequired,
-    duration : PropTypes.number.isRequired,
-    getTime  : PropTypes.func.isRequired,
-    showLabel: PropTypes.bool.isRequired,
+    label       : PropTypes.string.isRequired,
+    links       : PropTypes.object.isRequired,
+    startTime   : PropTypes.number.isRequired,
+    duration    : PropTypes.number.isRequired,
+    pauses      : PropTypes.object.isRequired,
+    isPaused    : PropTypes.bool.isRequired,
+    getTime     : PropTypes.func.isRequired,
+    showLabel   : PropTypes.bool.isRequired,
+    showControls: PropTypes.bool.isRequired,
+    onPlayPress : PropTypes.func.isRequired,
+    onPausePress: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -17,7 +24,10 @@ export default class Timer extends PureComponent {
     links: {},
     startTime: 0,
     duration: 0,
+    pauses: {},
+    isPaused: false,
     showLabel: false,
+    showControls: false,
   };
 
   static nf = new Intl.NumberFormat('en', {
@@ -30,13 +40,41 @@ export default class Timer extends PureComponent {
 
   timer = null;
 
-  startTimer({startTime, duration, getTime}) {
-    const endTime = startTime + duration;
+  onPlayPress = (e) => {
+    e.preventDefault();
+    this.props.onPlayPress();
+  };
+
+
+  onPausePress = (e) => {
+    e.preventDefault();
+    this.props.onPausePress();
+  };
+
+  getElapsedTime({startTime, pauses, now}) {
+    return Object.keys(pauses).reduce((elapsedTime, pauseKey) => {
+      const pause = pauses[pauseKey];
+      if (pause.pauseTime) {
+        return elapsedTime - (now - pause.pauseTime);
+      } else {
+        return elapsedTime + (now - pause.resumeTime);
+      }
+    }, now - startTime);
+  }
+
+  startTimer(props) {
+    const {startTime, duration, pauses, isPaused, getTime} = props;
 
     this.timer = setInterval(() => {
-      let now = getTime();
-      if (now >= endTime) {
-        now = endTime;
+      if (isPaused) {
+        this.stopTimer();
+        return;
+      }
+
+      const now = getTime();
+      const elapsedTime = this.getElapsedTime({startTime, pauses, now});
+
+      if (elapsedTime >= duration) {
         this.stopTimer();
       }
 
@@ -64,47 +102,74 @@ export default class Timer extends PureComponent {
 
   render() {
     const {styles, nf} = Timer;
-    const {label, links, startTime, duration, showLabel} = this.props;
+    const {
+      startTime,
+      duration,
+      pauses,
+      label,
+      links,
+      isPaused,
+      showLabel,
+      showControls,
+    } = this.props;
     const {now} = this.state;
 
-    const endTime = startTime + duration;
-    const remaining = Math.max(endTime - now, 0) / 1000;
+    const elapsedTime = this.getElapsedTime({startTime, pauses, now});
+    const remaining = Math.max(duration - elapsedTime, 0) / 1000;
     const minutes = Math.floor(remaining / 60);
     const seconds = Math.floor(remaining % 60);
 
     return (
-      <View
-        style={[(!showLabel || !label) && styles.noLabel]}
-        accessibilityRole='timer'
-      >
+      <View accessibilityRole='timer'>
         <Text style={styles.timer}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>
-        {showLabel && label ? (
-          <View style={styles.label}>
-            <MarkdownContent
-              style={styles.labelMarkdown}
-              content={label}
-              links={links}
+        <View style={[
+          styles.info,
+          !showLabel && !showControls && styles.noLabelOrControls,
+        ]}>
+          {showControls ? isPaused ? (
+            <Play
+              size={28}
+              onPress={this.onPlayPress}
             />
-          </View>
-        ) : (
-          null
-        )}
+          ) : (
+            <Pause
+              size={28}
+              onPress={this.onPausePress}
+            />
+          ) : null}
+          {showLabel && label ? (
+            <View style={styles.label}>
+              <MarkdownContent
+                style={styles.labelMarkdown}
+                content={label}
+                links={links}
+              />
+            </View>
+          ) : (
+            null
+          )}
+        </View>
       </View>
     );
   }
 
   static styles = StyleSheet.create({
-    noLabel: {
-      marginBottom: '2rem',
+    noLabelOrControls: {
+      marginTop: '2rem',
     },
     timer: {
       fontSize: '8rem',
       lineHeight: '8rem',
     },
-    label: {
+    info: {
+      flexDirection: 'row',
       marginTop: '0.25rem',
+    },
+    label: {
+      marginLeft: '0.5rem',
+      flexShrink: 1,
     },
     labelMarkdown: {
       marginVertical: 0,

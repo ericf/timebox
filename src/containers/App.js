@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link, Match, Miss} from 'react-router';
+import {Link, Match} from 'react-router';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import database from 'firebase/database';
 import {GithubAuthProvider} from 'firebase/auth';
 import MatchWhenAuthorized from '../components/MatchWhenAuthorized';
 import JSLogo from '../components/JSLogo';
@@ -21,8 +22,9 @@ import MembersPage from './MembersPage';
 
 export default class App extends Component {
   static contextTypes = {
-    app : PropTypes.object.isRequired,
-    now : PropTypes.func.isRequired,
+    app: PropTypes.object.isRequired,
+    now: PropTypes.func.isRequired,
+    isAuthorized: PropTypes.bool.isRequired,
     user: PropTypes.object,
   };
 
@@ -43,6 +45,48 @@ export default class App extends Component {
     auth.signOut();
   }
 
+  onTimerPlayPress = async () => {
+    const db = this.context.app.database();
+    const timeboxRef = db.ref('timebox');
+    const resumeKey = timeboxRef.child('pauses').push().key;
+
+    return timeboxRef.transaction((timebox) => {
+      if (timebox.isPaused) {
+        return {
+          ...timebox,
+          isPaused: false,
+          pauses: {
+            ...timebox.pauses,
+            [resumeKey]: {
+              resumeTime: database.ServerValue.TIMESTAMP,
+            },
+          },
+        };
+      }
+    });
+  };
+
+  onTimerPausePress = async () => {
+    const db = this.context.app.database();
+    const timeboxRef = db.ref('timebox');
+    const pauseKey = timeboxRef.child('pauses').push().key;
+
+    return timeboxRef.transaction((timebox) => {
+      if (!timebox.isPaused) {
+        return {
+          ...timebox,
+          isPaused: true,
+          pauses: {
+            ...timebox.pauses,
+            [pauseKey]: {
+              pauseTime: database.ServerValue.TIMESTAMP,
+            },
+          },
+        };
+      }
+    });
+  };
+
   componentDidMount() {
     const db = this.context.app.database();
     const ref = db.ref('timebox');
@@ -59,7 +103,7 @@ export default class App extends Component {
 
   render() {
     const {styles} = App;
-    const {user, now} = this.context;
+    const {user, isAuthorized, now} = this.context;
     const {timebox} = this.state;
 
     if (!user) {
@@ -104,43 +148,38 @@ export default class App extends Component {
           <MatchWhenAuthorized adminOnly pattern='/members' component={MembersPage}/>
         </View>
         <View style={styles.statusTray}>
-          <Match pattern='*' render={() => (
-            <View
-              style={styles.timer}
-              accessibilityRole='status'
-            >
-              <Match exactly pattern='/' render={() => (
-                <Timer
-                  {...timebox}
-                  getTime={now}
-                />
-              )}/>
-              <Miss render={() => (
-                <Timer
-                  {...timebox}
-                  getTime={now}
-                  showLabel
-                />
-              )}/>
-            </View>
-          )}/>
           <View
+            style={styles.timer}
+            accessibilityRole='status'
+          >
+            <Timer
+              {...timebox}
+              getTime={now}
+              onPlayPress={this.onTimerPlayPress}
+              onPausePress={this.onTimerPausePress}
+              showControls={isAuthorized}
+              showLabel
+            />
+          </View>
+          <TouchableOpacity
             style={styles.logo}
             accessibilityRole='banner'
           >
-            <TouchableOpacity>
-              <Link to='/'>
-                {({onClick}) => (
-                  <View onClick={onClick}>
-                    <JSLogo size={200}/>
-                    <Text style={styles.siteName}>
-                      TC39 Timebox
-                    </Text>
-                  </View>
-                )}
-              </Link>
-            </TouchableOpacity>
-          </View>
+            <Link to='/'>
+              {({href, onClick}) => (
+                <View
+                  accessibilityRole='link'
+                  href={href}
+                  onClick={onClick}
+                >
+                  <JSLogo size={200}/>
+                  <Text style={styles.siteName}>
+                    TC39 Timebox
+                  </Text>
+                </View>
+              )}
+            </Link>
+          </TouchableOpacity>
         </View>
       </View>
     );

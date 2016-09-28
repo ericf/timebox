@@ -21,33 +21,33 @@ export default class NavList extends PureComponent {
         accessibilityRole='list'
       >
         {this.props.items.map(({location, label}, i) => (
-          <View
+          <TouchableOpacity
             key={i}
             style={styles.listItem}
             accessibilityRole='listitem'
           >
-            <TouchableOpacity>
-              <Link
-                to={location}
-                activeOnlyWhenExact
-              >
-                {({isActive, onClick}) => (
-                  <View
-                    style={styles.label}
-                    onClick={onClick}
-                  >
-                    <Text style={styles.labelText}>
-                      {label}
-                    </Text>
-                    <View style={[
-                      styles.labelUnderline,
-                      isActive && {backgroundColor: '#000'},
-                    ]}/>
-                  </View>
-                )}
-              </Link>
-            </TouchableOpacity>
-          </View>
+            <Link
+              to={location}
+              activeOnlyWhenExact
+            >
+              {({href, isActive, onClick}) => (
+                <View
+                  accessibilityRole='link'
+                  href={href}
+                  style={styles.label}
+                  onClick={onClick}
+                >
+                  <Text style={styles.labelText}>
+                    {label}
+                  </Text>
+                  <View style={[
+                    styles.labelUnderline,
+                    isActive && {backgroundColor: '#000'},
+                  ]}/>
+                </View>
+              )}
+            </Link>
+          </TouchableOpacity>
         ))}
       </View>
     );
