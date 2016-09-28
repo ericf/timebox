@@ -18,12 +18,11 @@ class TimeboxedItem extends PureComponent {
   };
 
   onPress = (e) => {
-    if (e.target.matches('a, a *')) {
+    if (e.target.matches('a[href], a[href] *')) {
       return;
     }
 
     const {item, links, onSelect} = this.props;
-
     onSelect({...item, links});
   };
 
@@ -54,6 +53,7 @@ class TimeboxedItem extends PureComponent {
     if (onSelect) {
       return (
         <TouchableHighlight
+          accessibilityRole='link'
           style={styles.highlight}
           underlayColor='rgba(0, 0, 0, 0.15)'
           onPress={this.onPress}
