@@ -52,6 +52,10 @@ export default class Timer extends PureComponent {
   };
 
   getElapsedTime({startTime, pauses, now}) {
+    if (!startTime) {
+      return 0;
+    }
+
     return Object.keys(pauses).reduce((elapsedTime, pauseKey) => {
       const pause = pauses[pauseKey];
       if (pause.pauseTime) {
@@ -63,10 +67,10 @@ export default class Timer extends PureComponent {
   }
 
   startTimer(props) {
-    const {isPaused, getTime} = props;
+    const {isPaused, startTime, getTime} = props;
 
     this.timer = setInterval(() => {
-      if (isPaused) {
+      if (!startTime || isPaused) {
         this.stopTimer();
         return;
       }
@@ -112,10 +116,11 @@ export default class Timer extends PureComponent {
     const remaining = (duration - elapsedTime) / 1000;
     const minutes = Math.floor(Math.abs(remaining) / 60);
     const seconds = Math.floor(Math.abs(remaining) % 60);
+    const isOvertime = remaining < 0;
 
     return (
       <View accessibilityRole='timer'>
-        {remaining < 0 ? (
+        {isOvertime ? (
           <Text style={styles.overtime}>
             Overtime
           </Text>
@@ -124,15 +129,15 @@ export default class Timer extends PureComponent {
         )}
         <Text style={[
           styles.timer,
-          remaining < 0 && styles.timerOvertime
+          isOvertime && styles.timerOvertime
         ]}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>
         <View style={[
           styles.info,
-          !showLabel && !showControls && styles.noLabelOrControls,
+          ((!showLabel && !showControls) || !startTime) && styles.noLabelOrControls,
         ]}>
-          {showControls ? isPaused ? (
+          {(showControls && startTime) ? isPaused ? (
             <Play
               size={28}
               onPress={this.onPlayPress}
