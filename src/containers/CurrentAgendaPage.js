@@ -10,7 +10,6 @@ import Agenda from '../components/Agenda';
 export default class CurrentAgendaPage extends Component {
   static contextTypes = {
     app: PropTypes.object.isRequired,
-    now: PropTypes.func.isRequired,
     isAuthorized: PropTypes.bool.isRequired,
     accessToken: PropTypes.string,
   };
@@ -41,13 +40,13 @@ export default class CurrentAgendaPage extends Component {
   };
 
   setTimeboxItem = async (item) => {
-    const {app, now} = this.context;
+    const {app} = this.context;
     const db = app.database();
     const timeboxRef = db.ref('timebox');
-    const currentItem = (await timeboxRef.once('value')).val() || {};
+    const currentItem = (await timeboxRef.once('value')).val();
 
     let shouldSetItem = true;
-    if (currentItem.startTime + currentItem.duration > now()) {
+    if (currentItem && !currentItem.isPaused) {
       shouldSetItem = window.confirm(
         `There's currently a timeboxed item, are sure you want to change it?`
       );
