@@ -63,7 +63,7 @@ export default class Timer extends PureComponent {
   }
 
   startTimer(props) {
-    const {startTime, duration, pauses, isPaused, getTime} = props;
+    const {isPaused, getTime} = props;
 
     this.timer = setInterval(() => {
       if (isPaused) {
@@ -72,12 +72,6 @@ export default class Timer extends PureComponent {
       }
 
       const now = getTime();
-      const elapsedTime = this.getElapsedTime({startTime, pauses, now});
-
-      if (elapsedTime >= duration) {
-        this.stopTimer();
-      }
-
       this.setState({now});
     }, 100);
   }
@@ -115,13 +109,23 @@ export default class Timer extends PureComponent {
     const {now} = this.state;
 
     const elapsedTime = this.getElapsedTime({startTime, pauses, now});
-    const remaining = Math.max(duration - elapsedTime, 0) / 1000;
-    const minutes = Math.floor(remaining / 60);
-    const seconds = Math.floor(remaining % 60);
+    const remaining = (duration - elapsedTime) / 1000;
+    const minutes = Math.floor(Math.abs(remaining) / 60);
+    const seconds = Math.floor(Math.abs(remaining) % 60);
 
     return (
       <View accessibilityRole='timer'>
-        <Text style={styles.timer}>
+        {remaining < 0 ? (
+          <Text style={styles.overtime}>
+            Overtime
+          </Text>
+        ) : (
+          null
+        )}
+        <Text style={[
+          styles.timer,
+          remaining < 0 && styles.timerOvertime
+        ]}>
           {nf.format(minutes)}:{nf.format(seconds)}
         </Text>
         <View style={[
@@ -162,6 +166,16 @@ export default class Timer extends PureComponent {
     timer: {
       fontSize: '8rem',
       lineHeight: '8rem',
+      marginLeft: '-0.25rem',
+    },
+    timerOvertime: {
+      color: '#AA0C58',
+    },
+    overtime: {
+      fontSize: '1.25rem',
+      letterSpacing: '0.075em',
+      textTransform: 'uppercase',
+      color: '#AA0C58',
     },
     info: {
       flexDirection: 'row',
