@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.6.0"
+    "react-scripts": "0.6.1"
   },
   "dependencies": {
     "firebase": "^3.2.1",
     "marked": "^0.3.6",
-    "pushstate-server": "^1.9.0",
+    "pushstate-server": "^2.1.0",
     "react": "^15.2.1",
     "react-native-web": "0.0.45",
     "react-router": "^4.0.0-alpha.3"

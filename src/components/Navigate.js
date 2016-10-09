@@ -1,9 +1,9 @@
 import {Component, PropTypes} from 'react';
-import {router as routerShape} from 'react-router/PropTypes';
+import {routerContext} from 'react-router/PropTypes';
 
 export default class Navigate extends Component {
   static contextTypes = {
-    router: routerShape.isRequired,
+    router: routerContext.isRequired,
   };
 
   static propTypes = {
