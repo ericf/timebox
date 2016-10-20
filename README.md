@@ -1,351 +1,168 @@
-Below you will find some information on how to perform common tasks.  
-You can find the most recent version of this guide [here](https://github.com/facebookincubator/create-react-app/blob/master/template/README.md).
+TC39 Timebox
+============
 
-## Sending Feedback
+**<https://timebox.now.sh>**
 
-We are always open to [your feedback](https://github.com/facebookincubator/create-react-app/issues).
+**This app helps TC39 stay on agenda during meetings.** Essentially it's an over-engineered, real-time, collaborative timer.
 
-## Folder Structure
+## Overview
 
-After creation, your project should look like this:
+The app allows TC39 members (authenticated via GitHub) to set the current meeting agenda (parsed from the [agenda Markdown files](https://github.com/tc39/agendas)), and select a timeboxed agenda item to start the timer. The UI is real-time and collaborative, so any mutations made by a TC39 member are seen by everyone using/viewing the app.
 
-```
-my-app/
-  README.md
-  index.html
-  favicon.ico
-  node_modules/
-  package.json
-  src/
-    App.css
-    App.js
-    index.css
-    index.js
-    logo.svg
-```
+The app written in JavaScript (of course) and is built on these wonderful technologies:
 
-For the project to build, **these files must exist with exact filenames**:
+- [React](https://facebook.github.io/react/)
+- [React Native Web](https://github.com/necolas/react-native-web)
+- [React Router v4](https://react-router.now.sh)
+- [Create React App](https://github.com/facebookincubator/create-react-app)
+- [Firebase](https://firebase.google.com)
+- [Now](https://zeit.co/now/)
 
-* `index.html` is the page template;
-* `favicon.ico` is the icon you see in the browser tab;
-* `src/index.js` is the JavaScript entry point.
+## Developing
 
-You can delete or rename the other files.
+Getting setup for development is a bit more involved since you'll need to create a (free) Firebase app and database to connect to during development.
 
-You may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack.  
-You need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.
-
-You can, however, create more top-level directories.  
-They will not be included in the production build so you can use them for things like documentation.
-
->**Known Issue:**
->
->You may encounter an issue where changing a file inside `src` doesn’t trigger a recompilation. Most likely this happens because the path in your filesystem differs in its casing from the path you imported. For example, if a file is called `App.js` but you are importing `app.js`, the watcher might not recognize changes to it. We are [considering](https://github.com/facebookincubator/create-react-app/issues/240) enforcing some checks to prevent this. If this doesn’t help, check out the page on [troubleshooting watching](https://webpack.github.io/docs/troubleshooting.html#watching).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## How To...
-
-### Install a Dependency
-
-The generated project includes React and ReactDOM as dependencies. It also includes a set of scripts used by Create React App as a development dependency. You may install other dependencies (for example, React Router) with `npm`:
+Once you clone the repo, install the dependencies.
 
 ```
-npm install --save <library-name>
+cd timebox/
+npm install
 ```
 
-### Import a Component
+### Setup Firebase
 
-This project setup supports ES6 modules thanks to Babel.  
-While you can still use `require()` and `module.exports`, we encourage you to use [`import` and `export`](http://exploringjs.com/es6/ch_modules.html) instead.
-
-For example:
-
-### `Button.js`
-
-```js
-import React, { Component } from 'react';
-
-class Button extends Component {
-  render() {
-    // ...
-  }
-}
-
-export default Button; // Don’t forget to use export default!
-```
-
-### `DangerButton.js`
-
-```js
-import React, { Component } from 'react';
-import Button from './Button'; // Import a component from another file
-
-class DangerButton extends Component {
-  render() {
-    return <Button color="red" />;
-  }
-}
-
-export default DangerButton;
-```
-
-Be aware of the [difference between default and named exports](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281). It is a common source of mistakes.
-
-We suggest that you stick to using default imports and exports when a module only exports a single thing (for example, a component). That’s what you get when you use `export default Button` and `import Button from './Button'`.
-
-Named exports are useful for utility modules that export several functions. A module may have at most one default export and as many named exports as you like.
-
-Learn more about ES6 modules:
-
-* [When to use the curly braces?](http://stackoverflow.com/questions/36795819/react-native-es-6-when-should-i-use-curly-braces-for-import/36796281#36796281)
-* [Exploring ES6: Modules](http://exploringjs.com/es6/ch_modules.html)
-* [Understanding ES6: Modules](https://leanpub.com/understandinges6/read#leanpub-auto-encapsulating-code-with-modules)
-
-### Add a Stylesheet
-
-This project setup uses [Webpack](https://webpack.github.io/) for handling all assets. Webpack offers a custom way of “extending” the concept of `import` beyond JavaScript. To express that a JavaScript file depends on a CSS file, you need to **import the CSS from the JavaScript file**:
-
-#### `Button.css`
-
-```css
-.Button {
-  padding: 20px;
-}
-```
-
-#### `Button.js`
-
-```js
-import React, { Component } from 'react';
-import './Button.css'; // Tell Webpack that Button.js uses these styles
-
-class Button extends Component {
-  render() {
-    // You can use them as regular CSS styles
-    return <div className="Button" />;
-  }
-}
-```
-
-**This is not required for React** but many people find this feature convenient. You can read about the benefits of this approach [here](https://medium.com/seek-ui-engineering/block-element-modifying-your-javascript-components-d7f99fcab52b). However you should be aware that this makes your code less portable to other build tools and environments than Webpack.
-
-In development, expressing dependencies this way allows your styles to be reloaded on the fly as you edit them. In production, all CSS files will be concatenated into a single minified `.css` file in the build output.
-
-If you are concerned about using Webpack-specific semantics, you can put all your CSS right into `src/index.css`. It would still be imported from `src/index.js`, but you could always remove that import if you later migrate to a different build tool.
-
-### Post-Process CSS
-
-This project setup minifies your CSS and adds vendor prefixes to it automatically through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
-
-For example, this:
-
-```css
-.App {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-```
-
-becomes this:
-
-```css
-.App {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-```
-
-There is currently no support for preprocessors such as Less, or for sharing variables across CSS files.
-
-### Add Images and Fonts
-
-With Webpack, using static assets like images and fonts works similarly to CSS.
-
-You can **`import` an image right in a JavaScript module**. This tells Webpack to include that image in the bundle. Unlike CSS imports, importing an image or a font gives you a string value. This value is the final image path you can reference in your code.
-
-Here is an example:
-
-```js
-import React from 'react';
-import logo from './logo.png'; // Tell Webpack this JS file uses this image
-
-console.log(logo); // /logo.84287d09.png
-
-function Header() {
-  // Import result is the URL of your image
-  return <img src={logo} alt="Logo" />;
-}
-
-export default function Header;
-```
-
-This works in CSS too:
-
-```css
-.Logo {
-  background-image: url(./logo.png);
-}
-```
-
-Webpack finds all relative module references in CSS (they start with `./`) and replaces them with the final paths from the compiled bundle. If you make a typo or accidentally delete an important file, you will see a compilation error, just like when you import a non-existent JavaScript module. The final filenames in the compiled bundle are generated by Webpack from content hashes. If the file content changes in the future, Webpack will give it a different name in production so you don’t need to worry about long-term caching of assets.
-
-Please be advised that this is also a custom feature of Webpack.
-
-**It is not required for React** but many people enjoy it (and React Native uses a similar mechanism for images). However it may not be portable to some other environments, such as Node.js and Browserify. If you prefer to reference static assets in a more traditional way outside the module system, please let us know [in this issue](https://github.com/facebookincubator/create-react-app/issues/28), and we will consider support for this.
-
-### Display Lint Output in the Editor
-
->Note: this feature is available with `react-scripts@0.2.0` and higher.
-
-Some editors, including Sublime Text, Atom, and Visual Studio Code, provide plugins for ESLint.
-
-They are not required for linting. You should still the linter output right in your terminal as well as the browser console. However, if you prefer the lint results to appear right in your editor, there are some extra steps you can do.
-
-You would need to install an ESLint plugin for your editor first.  
-Then make sure `package.json` of your project ends with this block:
-
-```js
-{
-  // ...
-  "eslintConfig": {
-    "extends": "./node_modules/react-scripts/config/eslint.js"
-  }
-}
-```
-
-Projects generated with `react-scripts@0.2.0` and higher should already have it.  
-If you don’t need ESLint integration with your editor, you can safely delete those three lines from your `package.json`.
-
-Finally, you will need to install some packages *globally*:
-
-```sh
-npm install -g eslint babel-eslint eslint-plugin-react eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-flowtype
-```
-
-We recognize that this is suboptimal, but it is currently required due to the way we hide the ESLint dependency. The ESLint team is already [working on a solution to this](https://github.com/eslint/eslint/issues/3458) so this may become unnecessary in a couple of months.
-
-### Add Flow
-
-Flow typing is currently [not supported out of the box](https://github.com/facebookincubator/create-react-app/issues/72) with the default `.flowconfig` generated by Flow. If you run it, you might get errors like this:
+It's easiest to install the Firebase CLI to setup the Firebase project.
 
 ```
-node_modules/fbjs/lib/Deferred.js.flow:60
- 60:     Promise.prototype.done.apply(this._promise, arguments);
-                           ^^^^ property `done`. Property not found in
-495: declare class Promise<+R> {
-     ^ Promise. See lib: /private/tmp/flow/flowlib_34952d31/core.js:495
-
-node_modules/fbjs/lib/shallowEqual.js.flow:29
- 29:     return x !== 0 || 1 / (x: $FlowIssue) === 1 / (y: $FlowIssue);
-                                   ^^^^^^^^^^ identifier `$FlowIssue`. Could not resolve name
-
-src/App.js:3
-  3: import logo from './logo.svg';
-                      ^^^^^^^^^^^^ ./logo.svg. Required module not found
-
-src/App.js:4
-  4: import './App.css';
-            ^^^^^^^^^^^ ./App.css. Required module not found
-
-src/index.js:5
-  5: import './index.css';
-            ^^^^^^^^^^^^^ ./index.css. Required module not found
+npm install -g firebase-tools
 ```
 
-To fix this, change your `.flowconfig` to look like this:
+Inside the `timebox` directory, you can now initialize the Firebase project. You'll be asked a series of questions that you can answer as shown here:
 
 ```
-[libs]
-./node_modules/fbjs/flow/lib
+firebase init
 
-[options]
-esproposal.class_static_fields=enable
-esproposal.class_instance_fields=enable
+? What Firebase CLI features do you want to setup for this folder?
+ ◉ Database: Deploy Firebase Realtime Database Rules
+❯◯ Hosting: Configure and deploy Firebase Hosting sites
 
-module.name_mapper='^\(.*\)\.css$' -> 'react-scripts/config/flow/css'
-module.name_mapper='^\(.*\)\.\(jpg\|png\|gif\|eot\|svg\|ttf\|woff\|woff2\|mp4\|webm\)$' -> 'react-scripts/config/flow/file'
+? What Firebase project do you want to associate as default?
+❯ [create a new project]
 
-suppress_type=$FlowIssue
-suppress_type=$FlowFixMe
+? What file should be used for Database Rules? database.rules.json
+? File database.rules.json already exists. Do you want to overwrite it with the
+Database Rules for undefined from the Firebase Console? No
+Skipping overwrite of Database Rules.
+The rules defined in database.rules.json will be published when you do firebase
+deploy.
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
+✔  Firebase initialization complete!
+
+Project creation is only available from the Firebase Console
+Please visit https://console.firebase.google.com to create a new project, then
+run firebase use --add
 ```
 
-Re-run flow, and you shouldn’t get any extra issues.
+#### Create Firebase Project
 
-If you later `eject`, you’ll need to replace `react-scripts` references with the `<PROJECT_ROOT>` placeholder, for example:
+As the Firebase CLI says, navigate to <https://console.firebase.google.com> to create a Firebase project to use for development. You can name your Firebase project: __timebox-dev__.
+
+Once the project is created, select the _Add Firebase to your web app_ button, then __create a `.env` file with your project's configuration:__
 
 ```
-module.name_mapper='^\(.*\)\.css$' -> '<PROJECT_ROOT>/config/flow/css'
-module.name_mapper='^\(.*\)\.\(jpg\|png\|gif\|eot\|svg\|ttf\|woff\|woff2\|mp4\|webm\)$' -> '<PROJECT_ROOT>/config/flow/file'
+REACT_APP_API_KEY=<apiKey>
+REACT_APP_AUTH_DOMAIN=<authDomain>
+REACT_APP_DATABASE_URL=<databaseURL>
 ```
 
-We will consider integrating more tightly with Flow in the future so that you don’t have to do this.
+**Note:** You can copy `.env.example` --> `.env` and fill in the values.
 
-### Deploy to GitHub Pages
+This configuration will be picked up by the app during the dev and build processes and will be used to configure Firebase when running in the browser.
 
->Note: this feature is available with `react-scripts@0.2.0` and higher.
+Now back to the Firebase CLI, finish the init process by running the following:
 
-First, open your `package.json` and add a `homepage` field.
-It could look like this:
+```
+firebase use --add
 
-```js
-{
-  "name": "my-app",
-  "homepage": "http://myusername.github.io/my-app",
-  // ...
-}
+? Which project do you want to add? timebox-dev
+? What alias do you want to use for this project? (e.g. staging) dev
+
+Created alias dev for timebox-dev.
+Now using alias dev (timebox-dev)
 ```
 
-Now, whenever you run `npm run build`, you will see a cheat sheet with a sequence of commands to deploy to GitHub pages:
+#### Deploy Firebase Database
 
-```sh
-git checkout -B gh-pages
-git add -f build
-git commit -am "Rebuild website"
-git push origin :gh-pages
-git subtree push --prefix build origin gh-pages
-git checkout -
+With your Firebase project all setup, you can now create database which gives __your GitHub account__ write access and deploy the database and its rules to Firebase:
+
+```
+node scripts/create-db ericf | firebase database:set -y "/" && firebase deploy
+
+✔  Data persisted successfully
+
+View data at: https://console.firebase.google.com/project/timebox-dev/database/data/
+
+=== Deploying to 'timebox-dev'...
+
+i  deploying database
+✔  database: rules ready to deploy.
+i  starting release process (may take several minutes)...
+
+✔  Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/timebox-dev/overview
+Hosting URL: https://timebox-dev.firebaseapp.com
 ```
 
-You may copy and paste them, or put them into a custom shell script. You may also customize them for another hosting provider.
+#### Setup Firebase Authentication
 
-### Something Missing?
+1. Navigate to Authentication --> Sign-In Method
+2. Enable Anonymous
+3. Enable GitHub
 
-If you have ideas for more “How To” recipes that should be on this page, [let us know](https://github.com/facebookincubator/create-react-app/issues) or [contribute some!](https://github.com/facebookincubator/create-react-app/edit/master/template/README.md)
+**Note:** Setting up GitHub authentication is a bit more involved, but it should only take a minute if you follow these instructions: <https://firebase.google.com/docs/auth/web/github-auth#before_you_begin>
+
+### Running the App
+
+Now with Firebase all setup, you can run the app and start developing:
+
+```
+npm run dev
+```
+
+## Deploying
+
+The app is deployed to and served from [Now](https://zeit.co/now/). You can deploy to Now as well by first following the instructions to get started: <https://zeit.co/now/#get-started>
+
+### Create a Production Firebase Project
+
+Follow the [Firebase setup instructions above][#setup-firebase] to create _another_ Firebase project to use in production. This way the database is isolated from your development database.
+
+### Setup Now Secrets
+
+You need to configure your Now account with secrets that can be mapped to environment variables for your Now deployments. This way your local `.env` file is configured for your development Firebase project, while Now is configured with your production Firebase project.
+
+You should first read through the help on Now's secrets feature:
+
+```
+now help secrets
+```
+
+Create the following secrets to configure Now with your production Firebase project:
+
+```
+now secrets add timebox_prod_api_key "<apiKey>"
+now secrets add timebox_prod_auth_domain "<authDomain>"
+now secrets add timebox_prod_database_url "<databaseURL>"
+```
+
+### Deploy to Now
+
+With the production Firebase project setup and Now secrets configured to it, you can run the following command which will deploy the app to Now with all the proper environment variables:
+
+```
+npm run now
+```
