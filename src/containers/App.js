@@ -143,9 +143,9 @@ export default class App extends Component {
         >
           <Match exactly pattern='/' component={TimeboxPage}/>
           <Match exactly pattern='/agenda' component={CurrentAgendaPage}/>
-          <MatchWhenAuthorized pattern='/agendas/' component={AgendasPage}/>
-          <MatchWhenAuthorized pattern='/agendas/:agendaId' component={AgendaPage}/>
-          <MatchWhenAuthorized adminOnly pattern='/members' component={MembersPage}/>
+          <MatchWhenAuthorized exactly pattern='/agendas/' component={AgendasPage}/>
+          <MatchWhenAuthorized exactly pattern='/agendas/:agendaId' component={AgendaPage}/>
+          <MatchWhenAuthorized adminOnly exactly pattern='/members' component={MembersPage}/>
         </View>
         <View style={styles.statusTray}>
           <View
