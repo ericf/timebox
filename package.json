@@ -10,7 +10,7 @@
     "marked": "^0.3.6",
     "pushstate-server": "^2.1.0",
     "react": "^15.2.1",
-    "react-native-web": "0.0.45",
+    "react-native-web": "latest",
     "react-router": "^4.0.0-alpha.3"
   },
   "scripts": {
