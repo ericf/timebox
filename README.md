@@ -5,6 +5,8 @@ TC39 Timebox
 
 **This app helps TC39 stay on agenda during meetings.** Essentially it's an over-engineered, real-time, collaborative timer.
 
+![TC39 Timebox screenshot](https://cloud.githubusercontent.com/assets/29096/19759322/7b442876-9bfa-11e6-8928-a07afcb884ef.png)
+
 ## Overview
 
 The app allows TC39 members (authenticated via GitHub) to set the current meeting agenda (parsed from the [agenda Markdown files](https://github.com/tc39/agendas)), and select a timeboxed agenda item to start the timer. The UI is real-time and collaborative, so any mutations made by a TC39 member are seen by everyone using/viewing the app.
