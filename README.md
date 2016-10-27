@@ -5,7 +5,7 @@ TC39 Timebox
 
 **This app helps TC39 stay on agenda during meetings.** Essentially it's an over-engineered, real-time, collaborative timer.
 
-![TC39 Timebox screenshot](https://cloud.githubusercontent.com/assets/29096/19759322/7b442876-9bfa-11e6-8928-a07afcb884ef.png)
+[![TC39 Timebox screenshot](https://cloud.githubusercontent.com/assets/29096/19759322/7b442876-9bfa-11e6-8928-a07afcb884ef.png)](https://timebox.now.sh)
 
 ## Overview
 
