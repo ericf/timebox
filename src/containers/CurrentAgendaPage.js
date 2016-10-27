@@ -15,7 +15,7 @@ export default class CurrentAgendaPage extends Component {
   };
 
   state = {
-    agenda: null,
+    agenda: undefined,
     isLoading: false,
     isItemSelected: false,
   };
@@ -63,16 +63,15 @@ export default class CurrentAgendaPage extends Component {
   };
 
   componentDidMount() {
-    const loadingTimer = setTimeout(() => {
+    setTimeout(() => {
       this.setState(({agenda}) => ({
-        isLoading: !agenda,
+        isLoading: agenda === undefined,
       }));
     }, 200);
 
     const db = this.context.app.database();
     const ref = db.ref('agenda');
     const listener = ref.on('value', (snapshot) => {
-      clearTimeout(loadingTimer);
       this.setState({
         agenda: snapshot.val(),
         isLoading: false,
@@ -100,6 +99,12 @@ export default class CurrentAgendaPage extends Component {
     if (isLoading) {
       return (
         <ActivityIndicator color='black'/>
+      );
+    }
+
+    if (agenda === undefined) {
+      return (
+        null
       );
     }
 
