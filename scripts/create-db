@@ -13,7 +13,7 @@ fetch(`https://api.github.com/users/${githubUsername}`)
       if (res.ok) {
         return body;
       }
-      
+
       throw new Error(`${res.url}\n${body.message}`);
     });
   })
