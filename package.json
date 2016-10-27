@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "author": "Eric Ferraiuolo <edf@ericf.me>",
+  "license": "MIT",
+  "homepage": "https://timebox.now.sh",
   "devDependencies": {
     "dotenv-safe": "^2.3.2",
     "node-fetch": "^1.6.3",
