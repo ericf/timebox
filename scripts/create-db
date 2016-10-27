@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+const fetch = require('node-fetch');
+const githubUsername = process.argv[2];
+
+if (!githubUsername) {
+  console.error('Please provide your GitHub username; e.g.: `create-db ericf`');
+  process.exit(1);
+}
+
+fetch(`https://api.github.com/users/${githubUsername}`)
+  .then((res) => {
+    return res.json().then((body) => {
+      if (res.ok) {
+        return body;
+      }
+      
+      throw new Error(`${res.url}\n${body.message}`);
+    });
+  })
+  .then(({id}) => {
+    const db = {
+      admin: id,
+      members: {
+        [id]: true,
+      },
+    };
+
+    process.stdout.write(JSON.stringify(db, null, 2));
+  })
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
