@@ -63,7 +63,7 @@ export default class CurrentAgendaPage extends Component {
   };
 
   componentDidMount() {
-    setTimeout(() => {
+    const loadingTimer = setTimeout(() => {
       this.setState(({agenda}) => ({
         isLoading: !agenda,
       }));
@@ -72,6 +72,7 @@ export default class CurrentAgendaPage extends Component {
     const db = this.context.app.database();
     const ref = db.ref('agenda');
     const listener = ref.on('value', (snapshot) => {
+      clearTimeout(loadingTimer);
       this.setState({
         agenda: snapshot.val(),
         isLoading: false,
@@ -103,7 +104,18 @@ export default class CurrentAgendaPage extends Component {
     }
 
     if (!agenda) {
-      return null;
+      return (
+        <Text style={styles.noAgenda}>
+          There's no current agenda.{' '}
+          {isAuthorized ? (
+            <Text>
+              (<Link to='/agendas/'>Set Agenda</Link>)
+            </Text>
+          ) : (
+            null
+          )}
+        </Text>
+      );
     }
 
     return (
@@ -114,7 +126,9 @@ export default class CurrentAgendaPage extends Component {
         >
           Current TC39 Agenda:{' '}
           {isAuthorized ? (
-            ['(', <Link to='/agendas/' key={0}>Change</Link>, ')']
+            <Text>
+              (<Link to='/agendas/' key={0}>Change</Link>)
+            </Text>
           ) : (
             null
           )}
@@ -131,6 +145,9 @@ export default class CurrentAgendaPage extends Component {
   static styles = StyleSheet.create({
     heading: {
       color: 'rgba(0, 0, 0, 0.6)',
+    },
+    noAgenda: {
+      fontStyle: 'italic',
     },
   });
 }

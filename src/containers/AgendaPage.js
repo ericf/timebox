@@ -70,8 +70,9 @@ export default class AgendaPage extends Component {
     const db = this.context.app.database();
     const ref = db.ref('agenda');
     const listener = ref.on('value', (snapshot) => {
+      const {id: currentAgendaId} = snapshot.val() || {};
       this.setState((_, {params: {agendaId}}) => ({
-        isCurrentAgenda: snapshot.val().id === agendaId.replace('-', '/'),
+        isCurrentAgenda: currentAgendaId === agendaId.replace('-', '/'),
       }));
     });
 
