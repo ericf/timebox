@@ -141,7 +141,7 @@ The app is deployed to and served from [Now](https://zeit.co/now/). You can depl
 
 ### Create a Production Firebase Project
 
-Follow the [Firebase setup instructions above][#setup-firebase] to create _another_ Firebase project to use in production. This way the database is isolated from your development database.
+Follow the [Firebase setup instructions above](#setup-firebase) to create _another_ Firebase project to use in production. This way the database is isolated from your development database.
 
 ### Setup Now Secrets
 
