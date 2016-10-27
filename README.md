@@ -98,7 +98,7 @@ Now using alias dev (timebox-dev)
 
 #### Deploy Firebase Database
 
-With your Firebase project all setup, you can now create database which gives __your GitHub account__ write access and deploy the database and its rules to Firebase:
+With your Firebase project all setup, you can now create a version of the database which gives __your GitHub account__ write access and deploy that database and its rules to Firebase:
 
 ```
 node scripts/create-db ericf | firebase database:set -y "/" && firebase deploy
