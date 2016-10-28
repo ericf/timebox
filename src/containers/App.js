@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Link, Match} from 'react-router';
+import {Link, Match, Miss} from 'react-router';
 import {
   View,
   Text,
@@ -146,6 +146,11 @@ export default class App extends Component {
           <MatchWhenAuthorized exactly pattern='/agendas/' component={AgendasPage}/>
           <MatchWhenAuthorized exactly pattern='/agendas/:agendaId' component={AgendaPage}/>
           <MatchWhenAuthorized adminOnly exactly pattern='/members' component={MembersPage}/>
+          <Miss render={({location}) => (
+            <Text style={styles.notFound}>
+              Page not found. (<Link to='/'>Return Home</Link>)
+            </Text>
+          )}/>
         </View>
         <View style={styles.statusTray}>
           <View
@@ -229,6 +234,9 @@ export default class App extends Component {
     },
     timer: {
       flexShrink: 1,
+    },
+    notFound: {
+      fontStyle: 'italic',
     },
   });
 }

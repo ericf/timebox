@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {ActivityIndicator, Text} from 'react-native';
+import {ActivityIndicator, Text, StyleSheet} from 'react-native';
+import {Link} from 'react-router';
 import {fetchGithub} from '../github';
 import {createAgenda} from '../agendas';
 import Navigate from '../components/Navigate';
@@ -95,6 +96,7 @@ export default class AgendaPage extends Component {
   }
 
   render() {
+    const {styles} = AgendaPage;
     const {
       agenda,
       isLoading,
@@ -111,7 +113,9 @@ export default class AgendaPage extends Component {
 
     if (isInvalid) {
       return (
-        <Text>Agenda not found</Text>
+        <Text style={styles.notFound}>
+          Agenda not found. (<Link to='/agendas/'>Return to Agendas</Link>)
+        </Text>
       );
     }
 
@@ -130,4 +134,10 @@ export default class AgendaPage extends Component {
       null
     );
   }
+
+  static styles = StyleSheet.create({
+    notFound: {
+      fontStyle: 'italic',
+    },
+  });
 }
