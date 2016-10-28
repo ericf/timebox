@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "firebase": "^3.2.1",
+    "list": "^0.8.2",
     "marked": "^0.3.6",
-    "pushstate-server": "^2.1.0",
     "react": "^15.2.1",
     "react-native-web": "0.0.47",
     "react-router": "^4.0.0-alpha.3"
@@ -21,7 +21,7 @@
   "scripts": {
     "dev": "node scripts/check-env && react-scripts start",
     "build": "node scripts/check-env && react-scripts build",
-    "start": "pushstate-server build",
+    "start": "list build --single --cache 31556926",
     "now": "now -e REACT_APP_API_KEY=@timebox_prod_api_key -e REACT_APP_AUTH_DOMAIN=@timebox_prod_auth_domain -e REACT_APP_DATABASE_URL=@timebox_prod_database_url",
     "eject": "react-scripts eject"
   },
