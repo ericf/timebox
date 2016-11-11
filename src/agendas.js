@@ -86,7 +86,7 @@ function traverser(ast, visitor) {
   }
 
   function traverseNode(node, parent) {
-    let method = visitor[node.type];
+    const method = visitor[node.type];
     if (method) {
       method(node, parent);
     }
@@ -122,7 +122,7 @@ function transformer(ast) {
     );
   }
 
-  var newAst = {
+  let newAst = {
     ...ast,
     lists: [],
   };
@@ -143,7 +143,7 @@ function transformer(ast) {
 
 function generator(ast) {
   function generateTimeItems(node) {
-    let [timeLabel, {items = []} = {}] = node.body;
+    const [timeLabel, {items = []} = {}] = node.body;
 
     if (!/\d+/.test(timeLabel.text)) {
       return [];
@@ -159,7 +159,7 @@ function generator(ast) {
   }
 
   return ast.lists.map((list) => {
-    let [label, {items: times}] = list.items[0].body;
+    const [label, {items: times}] = list.items[0].body;
     return {
       label: label.text,
       items: times.reduce((items, time) => {
@@ -169,18 +169,22 @@ function generator(ast) {
   });
 }
 
+function b64DecodeUnicode(str) {
+  return decodeURIComponent([...atob(str)].map((c) => {
+    return `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`;
+  }).join(''));
+}
+
 export function createAgenda({html_url, url, path, sha, content}) {
-  let id = path.replace(/\.md$/, '');
-  let [year, month] = id.split('/').map(Number);
+  const id = path.replace(/\.md$/, '');
+  const [year, month] = id.split('/').map(Number);
   return {id, year, month, html_url, url, sha, content};
 };
 
 export function compileAgendaContent(agendaContent) {
-  // Remove newlines from Base64 content so Safari doesn't barf when decoding.
-  let decodedAgendaContent = atob(agendaContent.replace(/\n/g, ''));
-
-  let tokens = marked.lexer(decodedAgendaContent);
-  let ast = transformer(parser(tokens));
+  const decodedAgendaContent = b64DecodeUnicode(agendaContent);
+  const tokens = marked.lexer(decodedAgendaContent);
+  const ast = transformer(parser(tokens));
 
   return {
     timeboxed: generator(ast),
