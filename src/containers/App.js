@@ -129,6 +129,11 @@ export default class App extends Component {
             items={[
               {location: '/', label: 'Timebox'},
               {location: '/agenda', label: 'Agenda'},
+              {
+                location: 'https://github.com/ericf/timebox',
+                label: 'Source',
+                external: true,
+              },
             ]}
           />
           <Auth
