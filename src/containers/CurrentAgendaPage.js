@@ -130,9 +130,20 @@ export default class CurrentAgendaPage extends Component {
           accessibilityRole='heading'
         >
           Current TC39 Agenda:{' '}
+          <Text>
+            (
+              <Text
+                style={styles.link}
+                accessibilityRole='link'
+                href={agenda.html_url}
+              >
+                GitHub
+              </Text>
+            )
+          </Text>
           {isAuthorized ? (
             <Text>
-              (<Link to='/agendas/' key={0}>Change</Link>)
+              {' '}(<Link to='/agendas/'>Change</Link>)
             </Text>
           ) : (
             null
@@ -154,5 +165,8 @@ export default class CurrentAgendaPage extends Component {
     noAgenda: {
       fontStyle: 'italic',
     },
+    link: {
+      color: '#0446C4',
+    }
   });
 }
