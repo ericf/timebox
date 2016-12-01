@@ -20,7 +20,7 @@ export default class NavList extends PureComponent {
         style={styles.list}
         accessibilityRole='list'
       >
-        {this.props.items.map(({location, label}, i) => (
+        {this.props.items.map(({location, label, external}, i) => (
           <TouchableOpacity
             key={i}
             style={styles.listItem}
@@ -35,9 +35,12 @@ export default class NavList extends PureComponent {
                   accessibilityRole='link'
                   href={href}
                   style={styles.label}
-                  onClick={onClick}
+                  onClick={external ? null : onClick}
                 >
-                  <Text style={styles.labelText}>
+                  <Text style={[
+                    styles.labelText,
+                    external && styles.labelTextExternal,
+                  ]}>
                     {label}
                   </Text>
                   <View style={[
@@ -72,6 +75,9 @@ export default class NavList extends PureComponent {
       fontSize: '1.25rem',
       letterSpacing: '0.075em',
       textTransform: 'uppercase',
+    },
+    labelTextExternal: {
+      color: 'rgba(0, 0, 0, 0.6)',
     },
     labelUnderline: {
       marginTop: '0.25rem',
