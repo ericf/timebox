@@ -5,10 +5,19 @@
   "author": "Eric Ferraiuolo <edf@ericf.me>",
   "license": "MIT",
   "homepage": "https://timebox.now.sh",
-  "devDependencies": {
-    "dotenv-safe": "^3.0.0",
-    "node-fetch": "^1.6.3",
-    "react-scripts": "0.7.0"
+  "now": {
+    "alias": "timebox",
+    "env": {
+      "REACT_APP_API_KEY": "@timebox_prod_api_key",
+      "REACT_APP_AUTH_DOMAIN": "@timebox_prod_auth_domain",
+      "REACT_APP_DATABASE_URL": "@timebox_prod_database_url"
+    }
+  },
+  "scripts": {
+    "dev": "node scripts/check-env && react-scripts start",
+    "build": "node scripts/check-env && react-scripts build",
+    "start": "list build --single --cache 31556926",
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "firebase": "^3.2.1",
@@ -18,12 +27,10 @@
     "react-native-web": "0.0.55",
     "react-router": "^4.0.0-alpha.6"
   },
-  "scripts": {
-    "dev": "node scripts/check-env && react-scripts start",
-    "build": "node scripts/check-env && react-scripts build",
-    "start": "list build --single --cache 31556926",
-    "now": "now -e REACT_APP_API_KEY=@timebox_prod_api_key -e REACT_APP_AUTH_DOMAIN=@timebox_prod_auth_domain -e REACT_APP_DATABASE_URL=@timebox_prod_database_url",
-    "eject": "react-scripts eject"
+  "devDependencies": {
+    "dotenv-safe": "^3.0.0",
+    "node-fetch": "^1.6.3",
+    "react-scripts": "0.7.0"
   },
   "eslintConfig": {
     "extends": "react-app"
