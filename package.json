@@ -16,21 +16,21 @@
   "scripts": {
     "dev": "node scripts/check-env && react-scripts start",
     "build": "node scripts/check-env && react-scripts build",
-    "start": "list build --single --cache 31556926",
+    "start": "serve build --single --cache 31556926",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "firebase": "^3.2.1",
-    "list": "^0.9.1",
     "marked": "^0.3.6",
-    "react": "~15.3.1",
-    "react-native-web": "0.0.56",
-    "react-router": "^4.0.0-alpha.6"
+    "react": "~15.3.2",
+    "react-native-web": "0.0.59",
+    "react-router": "^4.0.0-alpha.6",
+    "serve": "^2.0.0"
   },
   "devDependencies": {
     "dotenv-safe": "^3.0.0",
     "node-fetch": "^1.6.3",
-    "react-scripts": "0.8.3"
+    "react-scripts": "0.8.4"
   },
   "eslintConfig": {
     "extends": "react-app"
