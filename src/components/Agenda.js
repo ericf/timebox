@@ -28,12 +28,17 @@ class TimeboxedItem extends PureComponent {
 
   render() {
     const {styles} = TimeboxedItem;
-    const {item: {duration, label}, links, onSelect} = this.props;
+    const {item: {duration, label, isComplete}, links, onSelect} = this.props;
     const durationMinutes = duration / (1000 * 60);
 
     const itemEl = (
       <View style={styles.container}>
-        <Text style={styles.label}>
+        <Text
+          style={[
+            styles.label,
+            isComplete && styles.complete,
+          ]}
+        >
           <MarkdownContent
             style={styles.labelMarkdown}
             content={label}
@@ -41,7 +46,10 @@ class TimeboxedItem extends PureComponent {
           />
         </Text>
         <Text
-          style={styles.duration}
+          style={[
+            styles.duration,
+            isComplete && styles.complete,
+          ]}
           selectable={false}
           accessibilityLabel={`${durationMinutes} minutes`}
         >
@@ -86,8 +94,10 @@ class TimeboxedItem extends PureComponent {
       order: 1,
       lineHeight: '1.5',
       marginRight: '0.5rem',
-      color: 'rgba(0, 0, 0, 0.6)',
-    }
+    },
+    complete: {
+      color: 'rgba(0, 0, 0, 0.36)',
+    },
   });
 }
 

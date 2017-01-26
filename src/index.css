@@ -6,5 +6,10 @@ html {
 a:link,
 a:visited {
   text-decoration: none;
-  color: #0446C4;
+  color: rgb(4, 70, 196);
+}
+
+del a:link,
+del a:visited {
+  color: rgba(4, 70, 196, 0.36);
 }
